@@ -1,0 +1,40 @@
+<svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28">
+    <defs><style>.cls-1{fill:#222222; width: 2px; height: 2px;}</style></defs>
+<rect width="28" height="28"/>
+<rect class="cls-1" x="20" y="26"/>
+<rect class="cls-1" x="22" y="24"/>
+<rect class="cls-1" x="24" y="22"/>
+<rect class="cls-1" x="26" y="20"/>
+<rect class="cls-1" x="14" y="24"/>
+<rect class="cls-1" x="16" y="22"/>
+<rect class="cls-1" x="18" y="20"/>
+<rect class="cls-1" x="20" y="18"/>
+<rect class="cls-1" x="22" y="16"/>
+<rect class="cls-1" x="24" y="14"/>
+<rect class="cls-1" x="8" transform="translate(10 -8) rotate(90)"/>
+<rect class="cls-1" x="10" y="2" transform="translate(14 -8) rotate(90)"/>
+<rect class="cls-1" x="12" y="4" transform="translate(18 -8) rotate(90)"/>
+<rect class="cls-1" x="14" y="6" transform="translate(22 -8) rotate(90)"/>
+<rect class="cls-1" x="16" y="8" transform="translate(26 -8) rotate(90)"/>
+<rect class="cls-1" x="18" y="10" transform="translate(30 -8) rotate(90)"/>
+<rect class="cls-1" x="4" y="4" transform="translate(10) rotate(90)"/>
+<rect class="cls-1" x="6" y="6" transform="translate(14) rotate(90)"/>
+<rect class="cls-1" x="8" y="8" transform="translate(18) rotate(90)"/>
+<rect class="cls-1" x="10" y="10" transform="translate(22) rotate(90)"/>
+<rect class="cls-1" x="12" y="12" transform="translate(26) rotate(90)"/>
+<rect class="cls-1" x="14" y="14" transform="translate(30) rotate(90)"/>
+<rect class="cls-1" y="8" transform="translate(10 8) rotate(90)"/>
+<rect class="cls-1" x="2" y="10" transform="translate(14 8) rotate(90)"/>
+<rect class="cls-1" x="4" y="12" transform="translate(18 8) rotate(90)"/>
+<rect class="cls-1" x="6" y="14" transform="translate(22 8) rotate(90)"/>
+<rect class="cls-1" x="8" y="16" transform="translate(26 8) rotate(90)"/>
+<rect class="cls-1" x="10" y="18" transform="translate(30 8) rotate(90)"/>
+<rect class="cls-1" x="22" y="4"/>
+<rect class="cls-1" x="24" y="2"/>
+<rect class="cls-1" x="26"/>
+<rect class="cls-1" x="18"/>
+<rect class="cls-1" y="26"/>
+<rect class="cls-1" x="2" y="24"/>
+<rect class="cls-1" x="4" y="22"/>
+<rect class="cls-1" y="18"/>
+</svg>

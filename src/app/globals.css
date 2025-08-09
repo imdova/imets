@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom animations if needed */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+:root {
+  --main-color: #041060;
+  --secondary-color: #e2b403;
+  --main-dark-color: #520b42;
+  --main-transparent-color: #0410601a;
+  --foreground: #171717;
+}
+
+@theme {
+  --color-main: var(--main-color);
+  --main-dark-color: var(--main-dark-color);
+  --color-foreground: var(--foreground);
+  --font-raleway: var(--font-cairo);
+}
+
+@layer components {
+  .card {
+    background-color: white;
+    border-radius: 25px;
+    padding: 6px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --backgroundk: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+@keyframes spinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tailwind-compatible utility class */
+.spin-slow {
+  @apply duration-300;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
