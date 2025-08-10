@@ -10,8 +10,13 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "@tiptap/extension-text-align": "^3.1.0",
+    "@tiptap/extension-underline": "^3.1.0",
+    "@tiptap/react": "^3.1.0",
+    "@tiptap/starter-kit": "^3.1.0",
     "apexcharts": "^4.7.0",
     "autoprefixer": "^10.4.21",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.19.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.482.0",
@@ -26,6 +31,7 @@
     "react-redux": "^9.2.0",
     "react-swipeable": "^7.0.2",
     "redux": "^5.0.1",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {

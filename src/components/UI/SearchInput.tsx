@@ -120,7 +120,7 @@ export function SearchInput({
       {(isMobileSearchOpen || !isMobile) && (
         <div
           ref={searchRef}
-          className={`absolute left-0 top-full z-50 w-full p-3 shadow-sm md:relative md:p-0`}
+          className={`absolute left-0 top-full z-50 w-full bg-white p-3 shadow-sm md:relative md:p-0`}
         >
           <div className="relative">
             {!isMobile && (

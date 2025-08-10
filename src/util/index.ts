@@ -1,3 +1,6 @@
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 /**
  * Checks if the current pathname matches the given pattern, supporting:
  * - Exact matches
@@ -40,3 +43,7 @@ export const isCurrentPage = (pathname: string, pattern: string): boolean => {
 
   return routeRegex.test(decodedPathname);
 };
+
+export function cn(...inputs: Parameters<typeof clsx>) {
+  return twMerge(clsx(...inputs));
+}

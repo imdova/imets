@@ -135,7 +135,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
             {isMobile && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className={`p-1 ${!expanded && "bg-secondary absolute left-12 top-2 rounded-full p-2 text-white"} md:hidden`}
+                className={`p-1 ${!expanded && "absolute left-12 top-2 rounded-full bg-secondary p-2 text-white"} md:hidden`}
               >
                 {expanded ? (
                   <ArrowLeftToLine size={12} />
@@ -375,6 +375,8 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                   backgroundColor: "rgba(254, 226, 226)",
                 }}
                 whileTap={{ scale: 0.98 }}
+                onHoverStart={() => setHoveredItem("signout")}
+                onHoverEnd={() => setHoveredItem(null)}
               >
                 <Power size={15} />
                 {expanded && "sign out"}
