@@ -1,3 +1,5 @@
+"use client";
+
 import { FilterBarProps, FilterOption } from "@/types/genral";
 import {
   Search,
@@ -9,6 +11,7 @@ import {
   PlusCircle,
   Check,
   LayoutGrid,
+  ArrowUpDown,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -82,9 +85,13 @@ export const FilterBar = ({
   showSearch = true,
   showViewToggle = true,
   showFilters = true,
+  showSort = false,
   placeholder = "Search...",
   showBtnAdd,
   BtnAdd,
+  sortOptions = [],
+  defaultSort = "",
+  onSortChange,
 }: FilterBarProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -97,6 +104,8 @@ export const FilterBar = ({
   );
   const [filterSearch, setFilterSearch] = useState<Record<string, string>>({});
   const [isFilterOpen, setIsFilterOpen] = useState<string | null>(null);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState(defaultSort);
   const filterRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -107,6 +116,7 @@ export const FilterBar = ({
         !filterRef.current.contains(event.target as Node)
       ) {
         setIsFilterOpen(null);
+        setIsSortOpen(false);
       }
     };
 
@@ -116,7 +126,7 @@ export const FilterBar = ({
     };
   }, []);
 
-  // Initialize active filters from URL
+  // Initialize active filters and sort from URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const filters: Record<string, string[]> = {};
@@ -125,20 +135,30 @@ export const FilterBar = ({
     const uniqueKeys = Array.from(new Set(Array.from(params.keys())));
 
     uniqueKeys.forEach((key) => {
-      if (key !== "search" && key !== "view" && key !== "page") {
+      if (
+        key !== "search" &&
+        key !== "view" &&
+        key !== "page" &&
+        key !== "sort"
+      ) {
         filters[key] = params.getAll(key);
       }
     });
 
     setActiveFilters(filters);
-  }, []);
+    setSelectedSort(params.get("sort") || defaultSort);
+  }, [defaultSort]);
 
-  // Update URL when filters or search change
+  // Update URL when filters, search or sort change
   const updateUrl = () => {
     const params = new URLSearchParams();
 
     if (searchQuery) {
       params.set("search", searchQuery);
+    }
+
+    if (selectedSort) {
+      params.set("sort", selectedSort);
     }
 
     Object.entries(activeFilters).forEach(([key, values]) => {
@@ -163,6 +183,16 @@ export const FilterBar = ({
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateUrl();
+  };
+
+  // Handle sort change
+  const handleSortChange = (value: string) => {
+    setSelectedSort(value);
+    if (onSortChange) {
+      onSortChange(value);
+    }
+    updateUrl();
+    setIsSortOpen(false);
   };
 
   // Toggle filter value
@@ -199,6 +229,7 @@ export const FilterBar = ({
   const resetFilters = () => {
     setActiveFilters({});
     setSearchQuery("");
+    setSelectedSort(defaultSort);
     const params = new URLSearchParams();
     if (viewMode) {
       params.set("view", viewMode);
@@ -434,6 +465,49 @@ export const FilterBar = ({
               )}
             </div>
           )}
+          {/* Sort Dropdown */}
+          {showSort && sortOptions.length > 0 && (
+            <div className="relative">
+              <button
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="flex w-full items-center justify-between gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 shadow-sm sm:w-fit"
+              >
+                <div className="flex items-center gap-2">
+                  <ArrowUpDown className="h-3 w-3" />
+                  <span className="text-sm">Sort</span>
+                  {selectedSort && (
+                    <span className="text-xs text-gray-500">
+                      {
+                        sortOptions.find((opt) => opt.value === selectedSort)
+                          ?.label
+                      }
+                    </span>
+                  )}
+                </div>
+                <ChevronDown
+                  className={`h-3 w-3 transition-transform ${isSortOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {isSortOpen && (
+                <div className="absolute left-0 z-10 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg">
+                  <ul className="py-1">
+                    {sortOptions.map((option) => (
+                      <li
+                        key={option.value}
+                        className={`cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 ${
+                          selectedSort === option.value ? "bg-gray-100" : ""
+                        }`}
+                        onClick={() => handleSortChange(option.value)}
+                      >
+                        {option.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
           {showSearch && (
             <form onSubmit={handleSearchSubmit} className="flex-1">
               <div className="relative md:max-w-xs">
@@ -461,6 +535,7 @@ export const FilterBar = ({
             </form>
           )}
         </div>
+
         <div className="flex w-full items-center justify-between gap-2 md:w-fit md:justify-start">
           {showViewToggle && (
             <div className="flex gap-2 rounded-lg bg-gray-100 p-2 px-3">

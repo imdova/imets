@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import { useSession } from "next-auth/react";
 import Sidebar from "@/components/sidebar/Sidebar";
 import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
 
 interface AccountLayoutProps {
   children: ReactNode;
@@ -27,7 +28,8 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ children }) => {
       </div>
       <main className="container flex-1 overflow-hidden lg:max-w-[1440px]">
         <Header />
-        <div className="p-2 lg:p-4">{children}</div>
+        <div className="bg-gray-50 p-2 lg:p-4">{children}</div>
+        <Footer />
       </main>
     </div>
   );

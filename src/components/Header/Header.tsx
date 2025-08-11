@@ -1,10 +1,10 @@
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut, Minimize, Maximize } from "lucide-react";
 import { DynamicDropdown } from "../UI/DynamicDropdown";
 import { SearchInput } from "../UI/SearchInput";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 
 // Constants for dropdown configurations
 // Constants with as const for better type inference
@@ -90,9 +90,20 @@ const MESSAGES = [
 
 export default function Header() {
   const { data: session } = useSession();
+  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const unreadNotifications = NOTIFICATIONS.filter((n) => n.isUnread).length;
   const unreadMessages = MESSAGES.filter((m) => m.isUnread).length;
+
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullScreen(true);
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
+      setIsFullScreen(false);
+    }
+  };
 
   return (
     <header className="relative flex items-center justify-end border-b border-gray-200 bg-white px-6 py-3 shadow-sm md:justify-between">
@@ -116,6 +127,21 @@ export default function Header() {
             />
           </Suspense>
         </div>
+
+        <button
+          onClick={toggleFullScreen}
+          className="rounded-md border border-gray-200 px-3 text-gray-700 hover:bg-gray-100"
+        >
+          {isFullScreen ? (
+            <>
+              <Minimize className="h-4 w-4" />
+            </>
+          ) : (
+            <>
+              <Maximize className="h-4 w-4" />
+            </>
+          )}
+        </button>
 
         {/* Messages Dropdown */}
         <DynamicDropdown

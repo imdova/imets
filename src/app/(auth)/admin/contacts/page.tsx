@@ -1,23 +1,43 @@
 "use client";
 import { FilterBar } from "@/components/filters/FilterBar";
-import FormModal from "@/components/FormModal/FormModal";
 import Breadcrumbs from "@/components/UI/Breadcrumbs";
 import ContactCard from "@/components/UI/cards/ContactCard";
 import Dropdown from "@/components/UI/Dropdown";
 import DynamicTable from "@/components/UI/DTable";
 import Pagination from "@/components/UI/Pagination";
 import { FilterOption } from "@/types/genral";
-import { Edit, Eye, FileBox, FileText, Sheet, Trash2 } from "lucide-react";
+import {
+  Edit,
+  Eye,
+  Facebook,
+  FileBox,
+  FileText,
+  Mail,
+  MessageSquareMore,
+  Phone,
+  Sheet,
+  Star,
+  Trash2,
+} from "lucide-react";
 import Image from "next/image";
 import { Suspense, useState } from "react";
+import AddContact from "../../../../components/forms/AddContact";
+import { Flag } from "@/components/UI/Flag";
+import Link from "next/link";
 
 interface Contact {
   id: string;
   name: string;
   role: string;
   email: string;
+  status: "active" | "inactive";
   phone: string;
-  country: string;
+  rating: string;
+  tags: string[];
+  location: {
+    country: string;
+    countryCode: string;
+  };
 }
 
 const labels = {
@@ -96,7 +116,10 @@ const contacts: Contact[] = [
     role: "UI/UX Designer",
     email: "caroltho3@example.com",
     phone: "+1 124547845",
-    country: "China",
+    location: { country: "China", countryCode: "cn" },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
   },
   {
     id: "2",
@@ -104,7 +127,10 @@ const contacts: Contact[] = [
     role: "Team Lead Dev",
     email: "jonathan@example.com",
     phone: "+1 321454789",
-    country: "Egypt",
+    location: { country: "Egypt", countryCode: "eg" },
+    rating: "4.6",
+    status: "inactive",
+    tags: ["Promotion"],
   },
   {
     id: "3",
@@ -112,7 +138,10 @@ const contacts: Contact[] = [
     role: "Technician",
     email: "dawmmercha@example.com",
     phone: "+1 478845447",
-    country: "Martin Lewis",
+    location: { country: "Martin Lewis", countryCode: "co" },
+    rating: "4.6",
+    status: "active",
+    tags: ["Promotion"],
   },
   {
     id: "4",
@@ -120,7 +149,10 @@ const contacts: Contact[] = [
     role: "Team Lead Dev",
     email: "brook@example.com",
     phone: "+1 278907145",
-    country: "Colombia",
+    location: { country: "Colombia", countryCode: "co" },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
   },
   {
     id: "5",
@@ -128,7 +160,10 @@ const contacts: Contact[] = [
     role: "Software Developer",
     email: "rachel@example.com",
     phone: "+1 215544845",
-    country: "Indonesia",
+    location: { country: "Indonesia", countryCode: "id" },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab"],
   },
   {
     id: "6",
@@ -136,7 +171,10 @@ const contacts: Contact[] = [
     role: "HR Manager",
     email: "ericadams@example.com",
     phone: "+1 19023-78104",
-    country: "France",
+    location: { country: "France", countryCode: "fr" },
+    rating: "4.6",
+    status: "active",
+    tags: ["VIP"],
   },
   {
     id: "7",
@@ -144,7 +182,10 @@ const contacts: Contact[] = [
     role: "Supervisor",
     email: "jonelle@example.com",
     phone: "+1 121145471",
-    country: "Cuba",
+    location: { country: "Cuba", countryCode: "cu" },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
   },
   {
     id: "8",
@@ -152,7 +193,10 @@ const contacts: Contact[] = [
     role: "Devops Engineer",
     email: "richard@example.com",
     phone: "+1 18902-63904",
-    country: "Belgium",
+    location: { country: "Belgium", countryCode: "be" },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
   },
 ];
 
@@ -177,10 +221,92 @@ export default function ContactPage() {
       ),
       sortable: true,
     },
-    { key: "role", header: "Role", sortable: true },
-    { key: "email", header: "Email" },
     { key: "phone", header: "Phone" },
-    { key: "country", header: "Country", sortable: true },
+    {
+      key: "tags",
+      header: "Tags",
+      render: (item: Contact) => (
+        <div className="flex flex-wrap gap-1">
+          {item.tags.length > 0 ? (
+            item.tags.map((tag, index) => {
+              const colors: Record<string, string> = {
+                Collab: "bg-blue-100 text-blue-800",
+                Promotion: "bg-yellow-100 text-yellow-800",
+                VIP: "bg-purple-100 text-purple-800",
+              };
+              return (
+                <span
+                  key={index}
+                  className={`rounded-full px-2 py-1 text-xs font-semibold ${colors[tag] || "bg-gray-100 text-gray-800"}`}
+                >
+                  {tag}
+                </span>
+              );
+            })
+          ) : (
+            <span className="text-xs text-gray-400">-</span>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "location",
+      header: "Location",
+      render: (item: Contact) => (
+        <div className="flex items-center gap-2">
+          <Flag countryCode={item.location.countryCode} />
+          <p className="text-sm">{item.location.country}</p>
+        </div>
+      ),
+    },
+    {
+      key: "rating",
+      header: "Rating",
+      render: (item: Contact) => (
+        <div className="flex items-center gap-2">
+          <Star className="h-4 w-4 text-secondary" />
+          <p className="text-sm text-gray-700">{item.rating}</p>
+        </div>
+      ),
+    },
+    {
+      key: "contact",
+      header: "Contact",
+      render: (item: Contact) => (
+        <div className="flex space-x-2 px-4">
+          <Link href="#" className="text-gray-400 hover:text-secondary">
+            <Mail className="h-3.5 w-3.5" />
+          </Link>
+          <Link href="#" className="text-gray-400 hover:text-secondary">
+            <Phone className="h-3.5 w-3.5" />
+          </Link>
+          <Link href="#" className="text-gray-400 hover:text-secondary">
+            <MessageSquareMore className="h-3.5 w-3.5" />
+          </Link>
+          <Link
+            href={`mailto:${item.email}`}
+            className="text-gray-400 hover:text-secondary"
+          >
+            <Facebook className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (item: Contact) => (
+        <span
+          className={`rounded-full px-2 py-1 text-xs font-semibold ${
+            item.status === "active"
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {item.status === "active" ? "Active" : "Inactive"}
+        </span>
+      ),
+    },
     {
       key: "actions",
       header: "Actions",
@@ -209,9 +335,6 @@ export default function ContactPage() {
     },
   ];
 
-  const handleClose = () => {
-    setIsOpen(false);
-  };
   return (
     <div>
       <h2 className="mt-4 text-xl font-bold">Contacts</h2>
@@ -246,6 +369,14 @@ export default function ContactPage() {
           onViewModeChange={setViewMode}
           placeholder="Search projects..."
           BtnAdd={{ label: "Add Contact", onClick: () => setIsOpen(true) }}
+          sortOptions={[
+            { value: "name-asc", label: "Name (A-Z)" },
+            { value: "name-desc", label: "Name (Z-A)" },
+            { value: "date-asc", label: "Date (Oldest first)" },
+            { value: "date-desc", label: "Date (Newest first)" },
+          ]}
+          defaultSort="name-asc"
+          showSort={viewMode === "list"}
         />
       </Suspense>
 
@@ -259,7 +390,7 @@ export default function ContactPage() {
                 role={contact.role}
                 email={contact.email}
                 phone={contact.phone}
-                country={contact.country}
+                country={contact.location.country}
                 avatar={
                   "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80"
                 }
@@ -282,59 +413,7 @@ export default function ContactPage() {
           />
         </Suspense>
       )}
-      <FormModal
-        open={isOpen}
-        onClose={handleClose}
-        onSubmit={() => console.log("submited")}
-        title="Contact Details"
-        description="Add or edit contact information"
-        fields={[
-          {
-            name: "firstName",
-            label: "First Name",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "lastName",
-            label: "Last Name",
-            type: "text",
-            required: true,
-          },
-          {
-            name: "email",
-            label: "Email",
-            type: "email",
-            required: true,
-          },
-          {
-            name: "phone",
-            label: "Phone Number",
-            type: "text",
-          },
-          {
-            name: "company",
-            label: "Company",
-            type: "text",
-          },
-          {
-            name: "position",
-            label: "Position",
-            type: "text",
-          },
-          {
-            name: "notes",
-            label: "Notes",
-            type: "textEditor",
-          },
-          {
-            name: "isFavorite",
-            label: "Mark as Favorite",
-            type: "checkbox",
-          },
-        ]}
-        submitButtonText={"Create Contact"}
-      />
+      <AddContact isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }

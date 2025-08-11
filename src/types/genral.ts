@@ -19,6 +19,11 @@ export type FilterOption = {
   }[];
 };
 
+export interface SortOption {
+  value: string;
+  label: string;
+}
+
 export type FilterBarProps = {
   viewMode?: "grid" | "list";
   onViewModeChange?: (mode: "grid" | "list") => void;
@@ -27,10 +32,14 @@ export type FilterBarProps = {
   showViewToggle?: boolean;
   showFilters?: boolean;
   showBtnAdd?: boolean;
+  showSort?: boolean;
   BtnAdd?: {
     label: string;
     url?: string;
     onClick?: () => void;
   };
   placeholder?: string;
+  sortOptions?: SortOption[];
+  defaultSort?: string;
+  onSortChange?: (sortValue: string) => void;
 };
