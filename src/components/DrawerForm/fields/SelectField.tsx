@@ -38,7 +38,7 @@ export const SelectField = ({ field, value, onChange }: SelectFieldProps) => {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex w-full items-center justify-between rounded-md border px-3 py-2 text-left ${
+        className={`mt-2 flex w-full items-center justify-between rounded-md border px-3 py-2 text-left ${
           isOpen ? "border-primary" : "border-gray-300"
         }`}
       >

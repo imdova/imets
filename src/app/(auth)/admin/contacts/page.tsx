@@ -24,21 +24,9 @@ import { Suspense, useState } from "react";
 import AddContact from "../../../../components/forms/AddContact";
 import { Flag } from "@/components/UI/Flag";
 import Link from "next/link";
-
-interface Contact {
-  id: string;
-  name: string;
-  role: string;
-  email: string;
-  status: "active" | "inactive";
-  phone: string;
-  rating: string;
-  tags: string[];
-  location: {
-    country: string;
-    countryCode: string;
-  };
-}
+import AddDeal from "@/components/forms/AddDeal";
+import { Contact } from "@/types/data";
+import { contacts } from "@/constants/contacts";
 
 const labels = {
   "/contacts": "Contacts",
@@ -109,99 +97,9 @@ const projectFilters: FilterOption[] = [
   },
 ];
 
-const contacts: Contact[] = [
-  {
-    id: "1",
-    name: "Carol Thomas",
-    role: "UI/UX Designer",
-    email: "caroltho3@example.com",
-    phone: "+1 124547845",
-    location: { country: "China", countryCode: "cn" },
-    rating: "4.6",
-    status: "active",
-    tags: ["Collab", "VIP"],
-  },
-  {
-    id: "2",
-    name: "Jonathan Smith",
-    role: "Team Lead Dev",
-    email: "jonathan@example.com",
-    phone: "+1 321454789",
-    location: { country: "Egypt", countryCode: "eg" },
-    rating: "4.6",
-    status: "inactive",
-    tags: ["Promotion"],
-  },
-  {
-    id: "3",
-    name: "Dawn Mercha",
-    role: "Technician",
-    email: "dawmmercha@example.com",
-    phone: "+1 478845447",
-    location: { country: "Martin Lewis", countryCode: "co" },
-    rating: "4.6",
-    status: "active",
-    tags: ["Promotion"],
-  },
-  {
-    id: "4",
-    name: "Brook Carter",
-    role: "Team Lead Dev",
-    email: "brook@example.com",
-    phone: "+1 278907145",
-    location: { country: "Colombia", countryCode: "co" },
-    rating: "4.6",
-    status: "active",
-    tags: ["Collab", "VIP"],
-  },
-  {
-    id: "5",
-    name: "Rachel Hampton",
-    role: "Software Developer",
-    email: "rachel@example.com",
-    phone: "+1 215544845",
-    location: { country: "Indonesia", countryCode: "id" },
-    rating: "4.6",
-    status: "active",
-    tags: ["Collab"],
-  },
-  {
-    id: "6",
-    name: "Eric Adams",
-    role: "HR Manager",
-    email: "ericadams@example.com",
-    phone: "+1 19023-78104",
-    location: { country: "France", countryCode: "fr" },
-    rating: "4.6",
-    status: "active",
-    tags: ["VIP"],
-  },
-  {
-    id: "7",
-    name: "Jonelle Curtiss",
-    role: "Supervisor",
-    email: "jonelle@example.com",
-    phone: "+1 121145471",
-    location: { country: "Cuba", countryCode: "cu" },
-    rating: "4.6",
-    status: "active",
-    tags: ["Collab", "VIP"],
-  },
-  {
-    id: "8",
-    name: "Richard Cooper",
-    role: "Devops Engineer",
-    email: "richard@example.com",
-    phone: "+1 18902-63904",
-    location: { country: "Belgium", countryCode: "be" },
-    rating: "4.6",
-    status: "active",
-    tags: ["Collab", "VIP"],
-  },
-];
-
 export default function ContactPage() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [dealIsOpen, setDealIsOpen] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const columns = [
     {
@@ -377,6 +275,7 @@ export default function ContactPage() {
           ]}
           defaultSort="name-asc"
           showSort={viewMode === "list"}
+          showDateRange={viewMode === "list"}
         />
       </Suspense>
 
@@ -413,7 +312,13 @@ export default function ContactPage() {
           />
         </Suspense>
       )}
-      <AddContact isOpen={isOpen} setIsOpen={setIsOpen} />
+      <AddContact
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        dealIsOpen={dealIsOpen}
+        setDealIsOpen={setDealIsOpen}
+      />
+      <AddDeal isOpen={dealIsOpen} setIsOpen={setDealIsOpen} />
     </div>
   );
 }

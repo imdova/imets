@@ -187,7 +187,7 @@ const OptionsDropdown = <T extends object>({
                       <button
                         onClick={handleClick}
                         disabled={isDisabled}
-                        className={`flex w-full items-center px-4 py-2 text-left text-sm ${
+                        className={`flex w-full items-center px-2 py-1 text-left text-xs ${
                           isDisabled
                             ? "cursor-not-allowed text-gray-400"
                             : "text-gray-700 hover:bg-gray-100"

@@ -118,9 +118,9 @@ const ContactCard: React.FC<ContactCardProps> = ({
           <Link href="#" className="p-2 text-gray-400 hover:text-secondary">
             <Mail className="h-3.5 w-3.5" />
           </Link>
-          <a href="#" className="p-2 text-gray-400 hover:text-secondary">
+          <Link href="#" className="p-2 text-gray-400 hover:text-secondary">
             <Phone className="h-3.5 w-3.5" />
-          </a>
+          </Link>
           <Link href="#" className="p-2 text-gray-400 hover:text-secondary">
             <MessageSquareMore className="h-3.5 w-3.5" />
           </Link>

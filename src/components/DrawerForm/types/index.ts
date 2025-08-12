@@ -36,6 +36,11 @@ interface BaseFormField<T extends string> {
   max?: number;
   errorMessage?: string;
   validate?: (value: unknown) => boolean | string;
+  addButn?: {
+    label: string;
+    herf?: string;
+    onclick?: () => void;
+  };
 }
 
 export interface TextFormField<T extends string> extends BaseFormField<T> {
@@ -89,10 +94,11 @@ export type FormField<T extends string> =
   | RichTextFormField<T>;
 
 export interface FormGroup<T extends FieldValues> {
-  title: string;
+  title?: string;
   fields: Array<FormField<Path<T>>>;
   icon?: LucideIcon;
   defaultOpen?: boolean;
+  collapsible?: boolean;
 }
 
 export interface FormDrawerProps<T extends FieldValues> {

@@ -42,4 +42,5 @@ export type FilterBarProps = {
   sortOptions?: SortOption[];
   defaultSort?: string;
   onSortChange?: (sortValue: string) => void;
+  showDateRange?: boolean;
 };

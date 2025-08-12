@@ -66,16 +66,16 @@ export function FormDrawer<T extends FieldValues>({
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-xl transform overflow-y-auto bg-white shadow-xl transition-all"
+              className="relative w-full max-w-2xl transform overflow-y-auto bg-white shadow-xl transition-all"
             >
               <div className="absolute right-0 top-0 z-10 pr-4 pt-4">
                 <button
                   type="button"
-                  className="rounded-md bg-white text-gray-400 hover:text-gray-500"
+                  className="rounded-md bg-orange-50 text-orange-600"
                   onClick={onClose}
                 >
                   <span className="sr-only">Close</span>
-                  <X className="h-6 w-6" />
+                  <X className="h-4 w-4" />
                 </button>
               </div>
 
@@ -90,6 +90,7 @@ export function FormDrawer<T extends FieldValues>({
                       <FormGroupRenderer<T>
                         key={groupIndex}
                         group={group}
+                        collapsible={group.collapsible}
                         form={form}
                         isOpen={groupOpenStates[groupIndex] ?? false}
                         onToggle={() => toggleGroup(groupIndex)}

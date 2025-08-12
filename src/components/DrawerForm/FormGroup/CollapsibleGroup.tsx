@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, LucideIcon } from "lucide-react";
 
 interface CollapsibleGroupProps {
-  title: string;
+  title?: string;
   children: React.ReactNode;
   isOpen: boolean;
   icon?: LucideIcon;

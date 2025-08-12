@@ -16,7 +16,9 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import DateRangeSelector from "../UI/DateRangeSelector";
+import { isSameDay } from "@/util/dateUtils";
 
 const dummyFilters: FilterOption[] = [
   {
@@ -92,6 +94,7 @@ export const FilterBar = ({
   sortOptions = [],
   defaultSort = "",
   onSortChange,
+  showDateRange = false,
 }: FilterBarProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -107,6 +110,19 @@ export const FilterBar = ({
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState(defaultSort);
   const filterRef = useRef<HTMLDivElement>(null);
+
+  // Initialize date range from URL
+  const [dateRange, setDateRange] = useState<{
+    startDate: Date | null;
+    endDate: Date | null;
+  }>({
+    startDate: searchParams.get("startDate")
+      ? new Date(searchParams.get("startDate") as string)
+      : null,
+    endDate: searchParams.get("endDate")
+      ? new Date(searchParams.get("endDate") as string)
+      : null,
+  });
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -139,40 +155,127 @@ export const FilterBar = ({
         key !== "search" &&
         key !== "view" &&
         key !== "page" &&
-        key !== "sort"
+        key !== "sort" &&
+        key !== "startDate" &&
+        key !== "endDate"
       ) {
         filters[key] = params.getAll(key);
       }
     });
 
-    setActiveFilters(filters);
-    setSelectedSort(params.get("sort") || defaultSort);
+    // Only update state if something actually changed
+    if (JSON.stringify(filters) !== JSON.stringify(activeFilters)) {
+      setActiveFilters(filters);
+    }
+
+    const newSort = params.get("sort") || defaultSort;
+    if (newSort !== selectedSort) {
+      setSelectedSort(newSort);
+    }
+
+    const newStartDate = params.get("startDate")
+      ? new Date(params.get("startDate") as string)
+      : null;
+    const newEndDate = params.get("endDate")
+      ? new Date(params.get("endDate") as string)
+      : null;
+
+    if (
+      newStartDate?.toISOString() !== dateRange.startDate?.toISOString() ||
+      newEndDate?.toISOString() !== dateRange.endDate?.toISOString()
+    ) {
+      setDateRange({
+        startDate: newStartDate,
+        endDate: newEndDate,
+      });
+    }
   }, [defaultSort]);
-
   // Update URL when filters, search or sort change
-  const updateUrl = () => {
-    const params = new URLSearchParams();
+  const updateUrl = useCallback(() => {
+    const currentParams = new URLSearchParams(window.location.search);
+    const newParams = new URLSearchParams();
 
+    // Add search query if it exists
     if (searchQuery) {
-      params.set("search", searchQuery);
+      newParams.set("search", searchQuery);
+    } else if (currentParams.has("search")) {
+      newParams.delete("search");
     }
 
+    // Add sort if it exists
     if (selectedSort) {
-      params.set("sort", selectedSort);
+      newParams.set("sort", selectedSort);
+    } else if (currentParams.has("sort")) {
+      newParams.delete("sort");
     }
 
+    // Add date range
+    if (dateRange.startDate) {
+      newParams.set("startDate", dateRange.startDate.toISOString());
+    } else if (currentParams.has("startDate")) {
+      newParams.delete("startDate");
+    }
+
+    if (dateRange.endDate) {
+      newParams.set("endDate", dateRange.endDate.toISOString());
+    } else if (currentParams.has("endDate")) {
+      newParams.delete("endDate");
+    }
+
+    // Add other filters
     Object.entries(activeFilters).forEach(([key, values]) => {
       values.forEach((value) => {
-        params.append(key, value);
+        newParams.append(key, value);
       });
     });
 
+    // Remove filters that were removed
+    Array.from(currentParams.keys()).forEach((key) => {
+      if (
+        key !== "search" &&
+        key !== "sort" &&
+        key !== "startDate" &&
+        key !== "endDate" &&
+        key !== "view" &&
+        !activeFilters[key]
+      ) {
+        newParams.delete(key);
+      }
+    });
+
+    // Add view mode
     if (viewMode) {
-      params.set("view", viewMode);
+      newParams.set("view", viewMode);
     }
 
-    router.replace(`${pathname}?${params.toString()}`);
-  };
+    // Only update URL if something actually changed
+    if (newParams.toString() !== currentParams.toString()) {
+      router.replace(`${pathname}?${newParams.toString()}`);
+    }
+  }, [
+    searchQuery,
+    selectedSort,
+    dateRange,
+    activeFilters,
+    viewMode,
+    pathname,
+    router,
+  ]);
+
+  // Handle date range change
+  const handleDateRangeChange = useCallback(
+    (range: { startDate: Date | null; endDate: Date | null }) => {
+      // Only update if the date range actually changed
+      if (
+        range.startDate?.toISOString() !== dateRange.startDate?.toISOString() ||
+        range.endDate?.toISOString() !== dateRange.endDate?.toISOString()
+      ) {
+        setDateRange(range);
+        updateUrl();
+      }
+    },
+    [dateRange.startDate, dateRange.endDate, updateUrl],
+  );
 
   // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -289,10 +392,10 @@ export const FilterBar = ({
 
   return (
     <div className="mb-6 flex flex-col gap-3" ref={filterRef}>
-      <div className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
-        <div className="flex w-full flex-col gap-3 sm:flex-row md:w-fit">
+      <div className="flex flex-col items-start justify-between gap-2 xl:flex-row xl:items-center">
+        <div className="flex w-full flex-col gap-3 lg:w-fit lg:flex-row">
           {showFilters && (
-            <div className="relative w-full sm:w-fit">
+            <div className="relative w-full lg:w-fit">
               <button
                 onClick={() =>
                   setIsFilterOpen(isFilterOpen ? null : "main-filter")
@@ -467,10 +570,10 @@ export const FilterBar = ({
           )}
           {/* Sort Dropdown */}
           {showSort && sortOptions.length > 0 && (
-            <div className="relative">
+            <div className="relative w-full lg:w-fit">
               <button
                 onClick={() => setIsSortOpen(!isSortOpen)}
-                className="flex w-full items-center justify-between gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 shadow-sm sm:w-fit"
+                className="flex w-full items-center justify-between gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 shadow-sm"
               >
                 <div className="flex items-center gap-2">
                   <ArrowUpDown className="h-3 w-3" />
@@ -508,16 +611,23 @@ export const FilterBar = ({
               )}
             </div>
           )}
+          {showDateRange && (
+            <DateRangeSelector
+              onDateChange={handleDateRangeChange}
+              initialRange={dateRange}
+              className="w-full lg:w-40"
+            />
+          )}
           {showSearch && (
             <form onSubmit={handleSearchSubmit} className="flex-1">
-              <div className="relative md:max-w-xs">
+              <div className="relative lg:max-w-xs">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
                   placeholder={placeholder}
                   value={searchQuery}
                   onChange={handleSearchChange}
-                  className="focus:ring-maitext-main shadow- w-full rounded-lg border border-gray-200 py-1.5 pl-10 pr-4 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-200 py-1.5 pl-10 pr-4 shadow-sm focus:outline-none"
                 />
                 {searchQuery && (
                   <button
@@ -536,9 +646,9 @@ export const FilterBar = ({
           )}
         </div>
 
-        <div className="flex w-full items-center justify-between gap-2 md:w-fit md:justify-start">
+        <div className="flex w-full items-center justify-between gap-2 lg:w-fit lg:justify-start">
           {showViewToggle && (
-            <div className="flex gap-2 rounded-lg bg-gray-100 p-2 px-3">
+            <div className="flex gap-2 rounded-lg bg-gray-100 p-2 px-3 shadow-sm">
               <button
                 onClick={toggleViewMode}
                 className={`rounded-md p-1 ${viewMode === "list" && "bg-secondary text-white"}`}
@@ -559,14 +669,14 @@ export const FilterBar = ({
           {showBtnAdd &&
             (BtnAdd?.url ? (
               <Link
-                className="hover:bg-main/90 flex items-center gap-2 rounded-lg bg-main px-3 py-2 text-sm text-white"
+                className="hover:bg-main/90 flex items-center gap-1 rounded-lg bg-main p-3 text-xs text-white"
                 href={BtnAdd.url}
               >
                 <PlusCircle size={15} /> {BtnAdd.label}
               </Link>
             ) : (
               <button
-                className="hover:bg-main/90 flex items-center gap-2 rounded-lg bg-main px-3 py-2 text-sm text-white"
+                className="hover:bg-main/90 flex items-center gap-1 rounded-lg bg-main p-3 text-xs text-white"
                 onClick={BtnAdd?.onClick}
               >
                 <PlusCircle size={15} /> {BtnAdd?.label}
@@ -578,6 +688,34 @@ export const FilterBar = ({
       {/* Active filters display */}
       {Object.keys(activeFilters).length > 0 && (
         <div className="flex flex-wrap items-center gap-4">
+          {dateRange.startDate && (
+            <div className="flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm">
+              <span className="mr-1 text-xs">
+                Date:{" "}
+                {dateRange.startDate.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+                {dateRange.endDate &&
+                  !isSameDay(dateRange.startDate, dateRange.endDate) &&
+                  ` - ${dateRange.endDate.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}`}
+              </span>
+              <button
+                onClick={() => {
+                  setDateRange({ startDate: null, endDate: null });
+                  updateUrl();
+                }}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="h-3 w-3" />
+              </button>
+            </div>
+          )}
           {Object.entries(activeFilters).map(([filterId, values]) =>
             values.map((value) => {
               const filter = filters.find((f) => f.id === filterId);

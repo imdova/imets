@@ -15,6 +15,8 @@ import { TimePicker } from "./TimePicker";
 import { PhoneInput } from "./PhoneInput";
 import TextEditor from "@/components/UI/editor/editor";
 import { RadioGroup } from "./RadioGroup";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
 interface FormFieldProps<T extends FieldValues> {
   field: FormField<Path<T>>;
@@ -89,11 +91,31 @@ export const FormFieldRenderer = <T extends FieldValues>({
 
   return (
     <div className="space-y-1">
-      <label className="block text-sm font-medium text-gray-700">
-        {field.label}
-        {field.required && <span className="text-red-500">*</span>}
-      </label>
-
+      <div className="flex items-center justify-between gap-2">
+        <label className="block text-sm font-medium text-gray-700">
+          {field.label}
+          {field.required && <span className="text-red-500">*</span>}
+        </label>
+        {field.addButn &&
+          (field.addButn.herf ? (
+            <Link
+              className="flex items-center gap-1 text-sm text-secondary hover:underline"
+              href={field.addButn.herf}
+            >
+              <Plus size={13} />
+              {field.addButn.label}
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={field.addButn?.onclick}
+              className="flex items-center gap-1 text-sm text-secondary hover:underline"
+            >
+              <Plus size={13} />
+              {field?.addButn?.label}
+            </button>
+          ))}
+      </div>
       {field.type === "text" ||
       field.type === "email" ||
       field.type === "textarea" ? (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Ellipsis } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { DropdownAction } from "@/types/genral";
 
 interface OptionsDropdownProps {
@@ -28,10 +28,10 @@ const OptionsDropdown: React.FC<OptionsDropdownProps> = ({ actions }) => {
   return (
     <div ref={dropdownRef} className="relative">
       <button
-        className="hover:text-primary flex items-center justify-center rounded-lg p-2 text-gray-500"
+        className="flex items-center justify-center rounded-md border border-gray-200 p-1 text-gray-500 hover:text-main"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Ellipsis size={18} />
+        <EllipsisVertical size={14} />
       </button>
 
       {isOpen && (

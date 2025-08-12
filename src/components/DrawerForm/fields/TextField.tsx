@@ -31,7 +31,7 @@ export const TextField = <T extends FieldValues>({
             {...form.register(field.name)}
             placeholder={field.placeholder}
             disabled={field.disabled}
-            className={`block w-full rounded-md border p-2 shadow-sm outline-none ${
+            className={`mt-2 block w-full rounded-md border p-2 shadow-sm outline-none ${
               error ? "border-red-500" : "border-gray-300"
             }`}
           />
