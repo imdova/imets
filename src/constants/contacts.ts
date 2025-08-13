@@ -11,6 +11,9 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "active",
     tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: true,
   },
   {
     id: "2",
@@ -22,6 +25,9 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "inactive",
     tags: ["Promotion"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
   },
   {
     id: "3",
@@ -33,6 +39,9 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "active",
     tags: ["Promotion"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
   },
   {
     id: "4",
@@ -44,6 +53,9 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "active",
     tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
   },
   {
     id: "5",
@@ -55,6 +67,9 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "active",
     tags: ["Collab"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
   },
   {
     id: "6",
@@ -66,6 +81,9 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "active",
     tags: ["VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
   },
   {
     id: "7",
@@ -77,6 +95,9 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "active",
     tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
   },
   {
     id: "8",
@@ -88,5 +109,8 @@ export const contacts: Contact[] = [
     rating: "4.6",
     status: "active",
     tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
   },
 ];

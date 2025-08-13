@@ -28,7 +28,7 @@ const AccountLayout: React.FC<AccountLayoutProps> = ({ children }) => {
       </div>
       <main className="container flex-1 overflow-hidden lg:max-w-[1440px]">
         <Header />
-        <div className="h-screen bg-gray-50 p-2 lg:p-4">{children}</div>
+        <div className="min-h-screen bg-gray-50 p-2 lg:p-4">{children}</div>
         <Footer />
       </main>
     </div>

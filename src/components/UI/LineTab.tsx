@@ -1,9 +1,11 @@
 "use client";
 
+import { LucideIcon } from "lucide-react";
 import { useRef } from "react";
 
 type Tab = {
   label: string;
+  icon?: LucideIcon;
 };
 
 type TabsProps = {
@@ -30,23 +32,27 @@ const LineTabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
   return (
     <div className="w-full">
       <div className="no-scrollbar overflow-x-auto">
-        <div className="mb-7 flex min-w-max gap-2 whitespace-nowrap border-b border-gray-200">
-          {tabs.map((tab, index) => (
-            <button
-              key={tab.label}
-              ref={(el) => {
-                tabRefs.current[index] = el;
-              }}
-              onClick={() => handleTabClick(tab.label, index)}
-              className={`px-8 py-2 text-center transition-all duration-300 ${
-                activeTab === tab.label
-                  ? "border-b border-b-main font-semibold text-main"
-                  : "text-secondary"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className="flex min-w-max gap-2 whitespace-nowrap border-b border-gray-200">
+          {tabs.map((tab, index) => {
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.label}
+                ref={(el) => {
+                  tabRefs.current[index] = el;
+                }}
+                onClick={() => handleTabClick(tab.label, index)}
+                className={`flex items-center gap-2 px-8 py-2 text-center transition-all duration-300 ${
+                  activeTab === tab.label
+                    ? "border-b border-b-main font-semibold text-main"
+                    : "text-gray-600"
+                }`}
+              >
+                {Icon && <Icon size={14} />}
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

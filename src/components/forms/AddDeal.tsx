@@ -24,9 +24,11 @@ type DealFormValues = {
 export default function AddDeal({
   isOpen,
   setIsOpen,
+  variant,
 }: {
   isOpen: boolean;
   setIsOpen: (X: boolean) => void;
+  variant?: "drawer" | "modal";
 }) {
   const dealFormGroups: FormGroup<DealFormValues>[] = [
     {
@@ -184,6 +186,7 @@ export default function AddDeal({
       onSubmit={handleSubmit}
       groups={dealFormGroups}
       initialValues={{}}
+      variant={variant}
       title="Add New Deal"
       submitText="Save"
       cancelText="Cancel"

@@ -4,6 +4,7 @@ import { LucideIcon } from "lucide-react";
 export interface SidebarItem {
   title: string;
   href: string;
+  pattern: string;
   icon?: LucideIcon;
   subItems?: SidebarItem[]; // Optional
 }

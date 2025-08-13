@@ -1,12 +1,14 @@
 export interface Contact {
   id: string;
   name: string;
+  avatar: string;
   role: string;
   email: string;
   status: "active" | "inactive";
   phone: string;
   rating: string;
   tags: string[];
+  isPrivate: boolean;
   location: {
     country: string;
     countryCode: string;

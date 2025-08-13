@@ -15,7 +15,8 @@ export function FormDrawer<T extends FieldValues>({
   submitText = "Submit",
   cancelText = "Cancel",
   loading = false,
-}: FormDrawerProps<T>) {
+  variant = "drawer", // Default to drawer
+}: FormDrawerProps<T> & { variant?: "drawer" | "modal" }) {
   const form = useForm<T>({
     defaultValues: initialValues as DefaultValues<T>,
   });
@@ -46,6 +47,19 @@ export function FormDrawer<T extends FieldValues>({
     });
   };
 
+  const drawerVariants = {
+    hidden: { x: "100%" },
+    visible: { x: 0 },
+    exit: { x: "100%" },
+  };
+
+  const modalVariants = {
+    hidden: { scale: 0.95, opacity: 0 },
+    visible: { scale: 1, opacity: 1 },
+    exit: { scale: 0.95, opacity: 0 },
+  };
+
+  const currentVariants = variant === "drawer" ? drawerVariants : modalVariants;
   return (
     <AnimatePresence>
       {isOpen && (
@@ -59,14 +73,20 @@ export function FormDrawer<T extends FieldValues>({
             onClick={onClose}
           />
 
-          {/* Drawer Container */}
-          <div className="flex h-full w-full justify-end">
+          {/* Container */}
+          <div
+            className={`flex h-full w-full ${variant === "drawer" ? "justify-end" : "items-center justify-center"}`}
+          >
             <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-2xl transform overflow-y-auto bg-white shadow-xl transition-all"
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={currentVariants}
+              className={`no-scrollbar relative overflow-y-auto bg-white shadow-xl transition-all ${
+                variant === "drawer"
+                  ? "w-full max-w-2xl"
+                  : "max-h-[600px] w-full max-w-lg rounded-lg"
+              }`}
             >
               <div className="absolute right-0 top-0 z-10 pr-4 pt-4">
                 <button

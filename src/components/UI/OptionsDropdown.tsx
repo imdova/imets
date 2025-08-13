@@ -28,7 +28,7 @@ const OptionsDropdown: React.FC<OptionsDropdownProps> = ({ actions }) => {
   return (
     <div ref={dropdownRef} className="relative">
       <button
-        className="flex items-center justify-center rounded-md border border-gray-200 p-1 text-gray-500 hover:text-main"
+        className="flex items-center justify-center rounded-lg border border-gray-200 p-2 hover:bg-main-transparent"
         onClick={() => setIsOpen(!isOpen)}
       >
         <EllipsisVertical size={14} />

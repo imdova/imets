@@ -21,10 +21,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Suspense, useState } from "react";
-import AddContact from "../../../../components/forms/AddContact";
 import { Flag } from "@/components/UI/Flag";
 import Link from "next/link";
 import AddDeal from "@/components/forms/AddDeal";
+import AddContact from "@/components/forms/AddContact";
 import { Contact } from "@/types/data";
 import { contacts } from "@/constants/contacts";
 
@@ -106,16 +106,19 @@ export default function ContactPage() {
       key: "name",
       header: "Name",
       render: (item: Contact) => (
-        <div className="flex items-center gap-2">
+        <Link
+          href={`/admin/contacts/${item.id}`}
+          className="flex items-center gap-2"
+        >
           <Image
-            src="https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80"
+            src={item.avatar}
             width={200}
             height={100}
             className="h-10 w-10 rounded-full object-cover"
             alt={item.name}
           />
           <span className="text-sm text-gray-600">{item.name}</span>
-        </div>
+        </Link>
       ),
       sortable: true,
     },
@@ -290,9 +293,8 @@ export default function ContactPage() {
                 email={contact.email}
                 phone={contact.phone}
                 country={contact.location.country}
-                avatar={
-                  "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80"
-                }
+                avatar={contact.avatar}
+                id={contact.id}
               />
             ))}
           </div>

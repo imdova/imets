@@ -40,14 +40,20 @@ type ContactFormValues = {
 };
 
 export default function AddContact({
+  title,
   isOpen,
   setDealIsOpen,
   setIsOpen,
+  initialValues,
+  variant,
 }: {
+  title?: string;
   isOpen: boolean;
   setIsOpen: (X: boolean) => void;
   dealIsOpen: boolean;
   setDealIsOpen: (X: boolean) => void;
+  initialValues?: ContactFormValues;
+  variant?: "drawer" | "modal";
 }) {
   const contactFormGroups: FormGroup<ContactFormValues>[] = [
     {
@@ -346,8 +352,9 @@ export default function AddContact({
       onClose={() => setIsOpen(false)}
       onSubmit={handleSubmit}
       groups={contactFormGroups}
-      initialValues={{}}
-      title="Add New Contact"
+      initialValues={initialValues ?? {}}
+      title={title ?? "Add New Contact"}
+      variant={variant}
       submitText="Save"
       cancelText="Cancel"
     />

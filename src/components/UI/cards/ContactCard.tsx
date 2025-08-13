@@ -1,4 +1,3 @@
-// components/ContactCard.tsx
 import { DropdownAction } from "@/types/genral";
 import {
   Edit,
@@ -16,6 +15,7 @@ import React from "react";
 import OptionsDropdown from "../OptionsDropdown";
 
 interface ContactCardProps {
+  id: string;
   name: string;
   role: string;
   email: string;
@@ -44,6 +44,7 @@ const actions: DropdownAction[] = [
 ];
 
 const ContactCard: React.FC<ContactCardProps> = ({
+  id,
   name,
   role,
   email,
@@ -57,7 +58,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
         <div className="flex items-start space-x-4 p-3">
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-3">
-              <div className="flex gap-2">
+              <Link href={`/admin/contacts/${id}`} className="flex gap-2">
                 {/* Avatar */}
                 <div className="flex-shrink-0">
                   <Image
@@ -74,7 +75,7 @@ const ContactCard: React.FC<ContactCardProps> = ({
                   </h3>
                   <p className="text-xs text-gray-500">{role}</p>
                 </div>
-              </div>
+              </Link>
               <OptionsDropdown actions={actions} />
             </div>
 
