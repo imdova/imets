@@ -17,6 +17,7 @@ import OptionsDropdown from "@/components/UI/OptionsDropdown";
 import AddDeal from "@/components/forms/AddDeal";
 import { Deal } from "@/types/data";
 import { initialDeals, stageGroups } from "@/constants/deals";
+import Link from "next/link";
 
 const labels = {
   "/deals": "Deals",
@@ -82,6 +83,11 @@ export default function DealPage() {
       key: "name",
       header: "Name",
       sortable: true,
+      render: (item: Deal) => (
+        <Link className="hover:underline" href={`/admin/deals/${item.id}`}>
+          {item.name}
+        </Link>
+      ),
     },
     {
       key: "stage",

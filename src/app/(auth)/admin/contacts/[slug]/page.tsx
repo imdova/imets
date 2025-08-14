@@ -26,6 +26,7 @@ import {
   Notebook,
   Phone,
   Plus,
+  PlusCircle,
   Share,
   Sheet,
   Star,
@@ -40,6 +41,7 @@ import Notes from "./panels/Notes";
 import Calls from "./panels/Calls";
 import Files from "./panels/Files";
 import Emails from "./panels/Emails";
+import AddCompany from "@/components/forms/AddCompany";
 
 const labels = {
   "/contacts": "Contacts",
@@ -69,6 +71,7 @@ export default function SingleContact({ params }: SingleContactProps) {
   const { slug } = use(params);
   const [isDealOpen, setIsDealOpen] = useState<boolean>(false);
   const [isContantOpen, setIsContantOpen] = useState<boolean>(false);
+  const [isAddComp, setIsAddComp] = useState<boolean>(false);
   //  Keep active tab in state
   const [activeTab, setActiveTab] = useState(tabs[0].label);
   const contact = contacts.find((contact) => contact.id === slug);
@@ -105,7 +108,7 @@ export default function SingleContact({ params }: SingleContactProps) {
         </div>
       </div>
       <Link
-        className="flex items-center gap-2 pb-4 text-sm text-gray-700 transition-colors hover:text-gray-900"
+        className="flex w-fit items-center gap-2 pb-4 text-sm text-gray-700 transition-colors hover:text-gray-900"
         href={"/admin/contacts"}
       >
         <MoveLeft size={14} />
@@ -248,6 +251,31 @@ export default function SingleContact({ params }: SingleContactProps) {
             </div>
           </div>
           <div className="border-b border-gray-200 p-4">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="mb-2 font-bold">Company</h2>
+              <button
+                onClick={() => setIsAddComp(true)}
+                className="flex items-center gap-1 text-sm text-main"
+              >
+                <PlusCircle size={13} /> Add New
+              </button>
+            </div>
+
+            <div className="flex gap-2">
+              <Image
+                className="h-16 w-16 rounded-lg border border-gray-200 object-cover"
+                src="/images/google-icon.png"
+                width={200}
+                height={200}
+                alt="copany name"
+              />
+              <div>
+                <h2 className="font-semibold">Google. Inc</h2>
+                <p className="text-sm text-gray-600">www.google.com</p>
+              </div>
+            </div>
+          </div>
+          <div className="border-b border-gray-200 p-4">
             <h2 className="mb-2 font-bold">Social Profile</h2>
             <div className="flex space-x-2">
               <Link href="#" className="p-2 text-gray-400 hover:text-secondary">
@@ -316,7 +344,14 @@ export default function SingleContact({ params }: SingleContactProps) {
           </div>
         </div>
       </div>
-      <AddDeal isOpen={isDealOpen} setIsOpen={setIsDealOpen} />
+
+      <AddCompany
+        title="Add Company"
+        isOpen={isAddComp}
+        setIsOpen={setIsAddComp}
+        dealIsOpen={isDealOpen}
+        setDealIsOpen={setIsDealOpen}
+      />
       <AddContact
         title="Edit Contact"
         isOpen={isContantOpen}
@@ -358,6 +393,7 @@ export default function SingleContact({ params }: SingleContactProps) {
           Visibility: "Private",
         }}
       />
+      <AddDeal isOpen={isDealOpen} setIsOpen={setIsDealOpen} />
     </div>
   );
 }

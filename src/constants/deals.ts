@@ -19,6 +19,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["Collab", "VIP"],
     status: "open",
+    isPrivate: true,
+    projects: ["Devops Design", "Margrate Design"],
   },
   {
     id: "2",
@@ -37,6 +39,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["VIP"],
     status: "open",
+    isPrivate: false,
+    projects: ["Devops Design", "Margrate Design"],
   },
   {
     id: "3",
@@ -55,6 +59,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["Collab", "VIP"],
     status: "open",
+    isPrivate: false,
+    projects: ["Devops Design", "Margrate Design"],
   },
   {
     id: "4",
@@ -73,6 +79,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["VIP"],
     status: "open",
+    isPrivate: false,
+    projects: ["Devops Design", "Margrate Design"],
   },
   {
     id: "5",
@@ -91,6 +99,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["VIP"],
     status: "open",
+    isPrivate: false,
+    projects: ["Devops Design", "Margrate Design"],
   },
   {
     id: "6",
@@ -109,6 +119,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["Collab", "VIP"],
     status: "open",
+    isPrivate: false,
+    projects: ["Devops Design", "Margrate Design"],
   },
   {
     id: "7",
@@ -127,6 +139,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["VIP"],
     status: "last",
+    isPrivate: false,
+    projects: ["Devops Design", "Margrate Design"],
   },
   {
     id: "8",
@@ -145,6 +159,8 @@ export const initialDeals: Deal[] = [
     expecteDate: "12 Jan 2024",
     tags: ["Collab"],
     status: "won",
+    isPrivate: false,
+    projects: ["Devops Design", "Margrate Design"],
   },
 ];
 

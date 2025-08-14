@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Upload, Trash2 } from "lucide-react";
 import { FileFormField } from "../types";
 import Image from "next/image";
-import { UseFormReturn, FieldValues, Path, FieldError } from "react-hook-form";
+import { UseFormReturn, FieldValues, Path } from "react-hook-form";
 
 interface FileUploadFieldProps<T extends FieldValues> {
   field: FileFormField<string>;
@@ -56,8 +56,6 @@ export const FileUploadField = <T extends FieldValues>({
       setPreviews(newPreviews);
     }
   };
-
-  const error = form.formState.errors[field.name] as FieldError | undefined;
 
   return (
     <div className="space-y-2">
@@ -117,10 +115,6 @@ export const FileUploadField = <T extends FieldValues>({
             </div>
           ))}
         </div>
-      )}
-
-      {error && (
-        <p className="text-sm text-red-500">{error.message?.toString()}</p>
       )}
     </div>
   );

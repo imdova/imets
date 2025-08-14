@@ -31,4 +31,6 @@ export interface Deal {
   expecteDate?: string;
   property: number;
   status: "open" | "last" | "won";
+  isPrivate: boolean;
+  projects?: string[];
 }

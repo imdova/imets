@@ -46,7 +46,10 @@ export const DealCard: React.FC<DealCardProps> = ({ deal }) => {
       className="rounded-xl border border-gray-200 bg-white p-4"
     >
       {/* Header with Avatar + Amount + Date */}
-      <div className="mb-3 flex items-start justify-between">
+      <Link
+        href={`/admin/deals/${deal.id}`}
+        className="mb-3 flex items-start justify-between"
+      >
         <div className="flex items-center gap-3">
           {/* Avatar */}
           <div
@@ -58,7 +61,7 @@ export const DealCard: React.FC<DealCardProps> = ({ deal }) => {
             <p className="text-sm">{deal.name}</p>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* Contact Info */}
       <div className="my-2 space-y-3 text-sm text-gray-600">

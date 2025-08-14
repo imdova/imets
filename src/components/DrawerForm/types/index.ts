@@ -14,7 +14,9 @@ export type FieldType =
   | "file"
   | "textarea"
   | "text-editor"
-  | "toggle";
+  | "toggle"
+  | "field-group"
+  | "conditional-group";
 
 export interface FormFieldOption {
   value: string;
@@ -52,7 +54,7 @@ export interface TextFormField<T extends string> extends BaseFormField<T> {
 }
 
 export interface SelectFormField<T extends string> extends BaseFormField<T> {
-  type: "select" | "multi-select" | "radio";
+  type: "select" | "multi-select" | "radio" | "conditional-group";
   options: FormFieldOption[];
   isMulti?: boolean;
 }
@@ -84,6 +86,48 @@ export interface RichTextFormField<T extends string> extends BaseFormField<T> {
   type: "text-editor";
 }
 
+interface ConditionalFieldGroup {
+  name: string;
+  type: Exclude<FieldType, "conditional-group">;
+  label: string;
+  required?: boolean;
+  errorMessage?: string;
+  options?: FormFieldOption[];
+  placeholder?: string;
+  min?: number;
+  max?: number;
+  accept?: string;
+}
+
+interface DynamicField {
+  name: string;
+  type: Exclude<FieldType, "conditional-group">;
+  label: string;
+  required?: boolean;
+  errorMessage?: string;
+  options?: FormFieldOption[];
+  placeholder?: string;
+  min?: number;
+  max?: number;
+  accept?: string; // For file inputs
+}
+
+export interface ConditionalGroupFormField<T extends string>
+  extends BaseFormField<T> {
+  type: "conditional-group";
+  options: FormFieldOption[];
+  dynamic?: boolean;
+  addLabel?: string;
+  dynamicFields?: DynamicField[];
+  conditionalFields: Record<string, ConditionalFieldGroup[]>;
+}
+export interface GroupFormField<T extends string> extends BaseFormField<T> {
+  type: "field-group";
+  dynamic?: boolean;
+  addLabel?: string;
+  fields: Array<FormField<string>>;
+}
+
 export type FormField<T extends string> =
   | TextFormField<T>
   | SelectFormField<T>
@@ -91,7 +135,9 @@ export type FormField<T extends string> =
   | ToggleFormField<T>
   | DateFormField<T>
   | PhoneFormField<T>
-  | RichTextFormField<T>;
+  | RichTextFormField<T>
+  | ConditionalGroupFormField<T>
+  | GroupFormField<T>;
 
 export interface FormGroup<T extends FieldValues> {
   title?: string;

@@ -4,8 +4,10 @@ import {
   FieldValues,
   Path,
   FieldError,
+  useWatch,
+  PathValue,
 } from "react-hook-form";
-import { FormField } from "../types";
+import { ConditionalGroupFormField, FormField, GroupFormField } from "../types";
 import { TextField } from "./TextField";
 import { SelectField } from "./SelectField";
 import { FileUploadField } from "./FileUpload";
@@ -16,11 +18,24 @@ import { PhoneInput } from "./PhoneInput";
 import TextEditor from "@/components/UI/editor/editor";
 import { RadioGroup } from "./RadioGroup";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, PlusCircle, Trash2 } from "lucide-react";
 
 interface FormFieldProps<T extends FieldValues> {
   field: FormField<Path<T>>;
   form: UseFormReturn<T>;
+}
+
+// Type guards
+export function isConditionalGroupField<T extends string>(
+  field: FormField<T>,
+): field is ConditionalGroupFormField<T> {
+  return field.type === "conditional-group";
+}
+
+export function isGroupField<T extends string>(
+  field: FormField<T>,
+): field is GroupFormField<T> | ConditionalGroupFormField<T> {
+  return field.type === "field-group" || field.type === "conditional-group";
 }
 
 export const FormFieldRenderer = <T extends FieldValues>({
@@ -28,8 +43,8 @@ export const FormFieldRenderer = <T extends FieldValues>({
   form,
 }: FormFieldProps<T>) => {
   const error = form.formState.errors[field.name] as FieldError | undefined;
+  const watchedValue = useWatch({ control: form.control, name: field.name });
 
-  // Define validation rules based on field configuration
   const getValidationRules = () => {
     const rules: {
       required?: string | { value: boolean; message: string };
@@ -89,6 +104,37 @@ export const FormFieldRenderer = <T extends FieldValues>({
 
   const validationRules = getValidationRules();
 
+  const handleAddItem = () => {
+    if (!isGroupField(field)) return;
+
+    const currentItems = form.getValues(`${field.name}.items` as Path<T>) || [];
+    const fieldsToUse =
+      field.type === "field-group"
+        ? field.fields
+        : field.conditionalFields[watchedValue?.type] || [];
+
+    const newItem = fieldsToUse.reduce((acc, df) => {
+      return { ...acc, [df.name]: "" };
+    }, {});
+
+    form.setValue(
+      `${field.name}.items` as Path<T>,
+      [...currentItems, newItem] as PathValue<T, Path<T>>,
+      { shouldValidate: true },
+    );
+  };
+
+  const handleRemoveItem = (index: number) => {
+    const currentItems = form.getValues(`${field.name}.items` as Path<T>) || [];
+    const updatedItems = currentItems.filter((_, i) => i !== index);
+
+    form.setValue(
+      `${field.name}.items` as Path<T>,
+      updatedItems as PathValue<T, Path<T>>,
+      { shouldValidate: true },
+    );
+  };
+
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between gap-2">
@@ -108,17 +154,141 @@ export const FormFieldRenderer = <T extends FieldValues>({
           ) : (
             <button
               type="button"
-              onClick={field.addButn?.onclick}
+              onClick={field.addButn?.onclick || handleAddItem}
               className="flex items-center gap-1 text-sm text-secondary hover:underline"
             >
               <Plus size={13} />
-              {field?.addButn?.label}
+              {field?.addButn?.label || "Add"}
             </button>
           ))}
       </div>
-      {field.type === "text" ||
-      field.type === "email" ||
-      field.type === "textarea" ? (
+
+      {isGroupField(field) ? (
+        <div className="space-y-4">
+          {field.type === "conditional-group" && (
+            <Controller
+              name={`${field.name}.type` as Path<T>}
+              control={form.control}
+              rules={validationRules}
+              render={({ field: { value, onChange } }) => (
+                <RadioGroup
+                  value={value}
+                  onChange={onChange}
+                  field={{
+                    ...field,
+                    options: field.options || [],
+                  }}
+                />
+              )}
+            />
+          )}
+
+          {field.dynamic ? (
+            <>
+              {(watchedValue?.items || [{}]).map(
+                (_: unknown, index: number) => {
+                  const currentFields =
+                    field.type === "field-group"
+                      ? field.fields
+                      : field.conditionalFields[watchedValue?.type] || [];
+                  if (
+                    field.type === "conditional-group" &&
+                    field.conditionalFields[watchedValue?.type]?.length === 0
+                  ) {
+                    return;
+                  }
+
+                  return (
+                    <div key={index} className="flex items-end gap-4">
+                      <div className="grid flex-1 grid-cols-2 gap-4">
+                        {currentFields.map((subField) => (
+                          <Controller
+                            key={`${subField.name}-${index}`}
+                            name={
+                              `${field.name}.items.${index}.${subField.name}` as Path<T>
+                            }
+                            control={form.control}
+                            rules={{
+                              required: subField.required
+                                ? subField.errorMessage ||
+                                  `${subField.label} is required`
+                                : false,
+                            }}
+                            render={({ field: controllerField }) => (
+                              <div className="flex flex-col">
+                                {index === 0 && (
+                                  <label className="block text-sm font-medium text-gray-700">
+                                    {subField.label}
+                                    {subField.required && (
+                                      <span className="text-red-500">*</span>
+                                    )}
+                                  </label>
+                                )}
+
+                                <TextField
+                                  field={{
+                                    ...subField,
+                                    name: `${field.name}.items.${index}.${subField.name}` as Path<T>,
+                                    label: index === 0 ? subField.label : ``,
+                                    type: subField.type as
+                                      | "text"
+                                      | "email"
+                                      | "textarea",
+                                  }}
+                                  form={form}
+                                  {...controllerField}
+                                />
+                              </div>
+                            )}
+                          />
+                        ))}
+                      </div>
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveItem(index)}
+                          className="mb-1 pb-3 text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 size={13} />
+                        </button>
+                      )}
+                      {index === 0 && (
+                        <button
+                          type="button"
+                          onClick={handleAddItem}
+                          className="pb-3 text-secondary"
+                        >
+                          <PlusCircle size={13} />
+                        </button>
+                      )}
+                    </div>
+                  );
+                },
+              )}
+            </>
+          ) : (
+            <div className="grid grid-cols-2 gap-4">
+              {(field.type === "field-group"
+                ? field.fields
+                : field.conditionalFields[watchedValue?.type] || []
+              ).map((subField) => (
+                <FormFieldRenderer
+                  key={subField.name}
+                  field={{
+                    ...subField,
+                    name: `${field.name}.${subField.name}` as Path<T>,
+                    label: subField.label,
+                    type: subField.type as "text" | "email" | "textarea",
+                  }}
+                  form={form}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      ) : field.type === "text" ||
+        field.type === "email" ||
+        field.type === "textarea" ? (
         <Controller
           name={field.name as Path<T>}
           control={form.control}
