@@ -16,6 +16,7 @@ export function FormDrawer<T extends FieldValues>({
   cancelText = "Cancel",
   loading = false,
   variant = "drawer", // Default to drawer
+  minHight = 300,
 }: FormDrawerProps<T> & { variant?: "drawer" | "modal" }) {
   const form = useForm<T>({
     defaultValues: initialValues as DefaultValues<T>,
@@ -82,10 +83,10 @@ export function FormDrawer<T extends FieldValues>({
               animate="visible"
               exit="exit"
               variants={currentVariants}
-              className={`no-scrollbar relative overflow-y-auto bg-white shadow-xl transition-all ${
+              className={`relative bg-white shadow-xl transition-all ${
                 variant === "drawer"
                   ? "w-full max-w-2xl"
-                  : "max-h-[600px] w-full max-w-lg rounded-lg"
+                  : "w-full max-w-lg rounded-lg"
               }`}
             >
               <div className="absolute right-0 top-0 z-10 pr-4 pt-4">
@@ -99,13 +100,21 @@ export function FormDrawer<T extends FieldValues>({
                 </button>
               </div>
 
-              <div className="px-2 pb-4 pt-5 sm:p-3 sm:pb-4">
+              <div className="h-full px-2 pb-4 pt-5 sm:p-3 sm:pb-4">
                 <h3 className="p-2 text-lg font-medium leading-6 text-gray-900">
                   {title}
                 </h3>
 
-                <form onSubmit={form.handleSubmit(handleSubmit)}>
-                  <div className="mt-6 space-y-4">
+                <form
+                  className={`relative flex flex-col justify-between`}
+                  onSubmit={form.handleSubmit(handleSubmit)}
+                >
+                  <div
+                    style={{ minHeight: minHight }}
+                    className={`no-scrollbar relative mt-6 space-y-4 overflow-y-auto pb-16 ${
+                      variant === "drawer" ? "max-h-[650px]" : "max-h-[600px]"
+                    }`}
+                  >
                     {groups.map((group, groupIndex) => (
                       <FormGroupRenderer<T>
                         key={groupIndex}
@@ -118,7 +127,7 @@ export function FormDrawer<T extends FieldValues>({
                     ))}
                   </div>
 
-                  <div className="mt-8 flex justify-end space-x-3">
+                  <div className="absolute bottom-0 left-0 z-10 mt-8 flex w-full justify-end space-x-3 bg-white p-3">
                     <button
                       type="button"
                       onClick={onClose}

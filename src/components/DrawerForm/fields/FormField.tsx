@@ -19,6 +19,7 @@ import TextEditor from "@/components/UI/editor/editor";
 import { RadioGroup } from "./RadioGroup";
 import Link from "next/link";
 import { Plus, PlusCircle, Trash2 } from "lucide-react";
+import { UserMultiSelect } from "./UserMultiSelect";
 
 interface FormFieldProps<T extends FieldValues> {
   field: FormField<Path<T>>;
@@ -372,6 +373,20 @@ export const FormFieldRenderer = <T extends FieldValues>({
           rules={validationRules}
           render={({ field: { value, onChange } }) => (
             <TextEditor value={value} onChange={onChange} />
+          )}
+        />
+      ) : field.type === "user-multi-select" ? (
+        <Controller
+          name={field.name as Path<T>}
+          control={form.control}
+          rules={validationRules}
+          render={({ field: { value, onChange } }) => (
+            <UserMultiSelect
+              field={field}
+              value={value}
+              onChange={onChange}
+              placeholder={field.placeholder}
+            />
           )}
         />
       ) : null}

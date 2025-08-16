@@ -1,6 +1,4 @@
 "use client";
-import AddContact from "@/components/forms/AddContact";
-import AddDeal from "@/components/forms/AddDeal";
 import Breadcrumbs from "@/components/UI/Breadcrumbs";
 import Dropdown from "@/components/UI/Dropdown";
 import LineTabs from "@/components/UI/LineTab";
@@ -32,15 +30,14 @@ import Notes from "./panels/Notes";
 import Calls from "./panels/Calls";
 import Files from "./panels/Files";
 import Emails from "./panels/Emails";
-import AddCompany from "@/components/forms/AddCompany";
-import { initialDeals } from "@/constants/deals";
 import CustomSelect from "@/components/UI/CustomSelect";
-import PipelineStatus from "@/components/UI/PipelineStatus";
-import AddDealOwner from "@/components/forms/AddDealOwner";
+import LeadsPipelineStatus from "@/components/UI/PipelineStatus";
 import AddConracts from "@/components/forms/AddConracts";
+import { initialLeads } from "@/constants/leads";
+import { formatDate } from "@/util/dateUtils";
 
 const labels = {
-  "/deals": "deals",
+  "/Leads": "Leads",
 };
 
 const tabs = [
@@ -51,7 +48,7 @@ const tabs = [
   { label: "Email", icon: Mail },
 ];
 
-interface SingleDealProps {
+interface SingleLeadProps {
   params: Promise<{ slug: string }>;
 }
 
@@ -66,17 +63,14 @@ const colors = [
   "bg-orange-500",
 ];
 
-export default function SingleDeal({ params }: SingleDealProps) {
+export default function SingleLead({ params }: SingleLeadProps) {
   const { slug } = use(params);
-  const [isDealOpen, setIsDealOpen] = useState<boolean>(false);
-  const [isDealOwnerOpen, setIsDealOwnerOpen] = useState<boolean>(false);
   const [isConractsOpen, setIsConractsOpen] = useState<boolean>(false);
-  const [isContantOpen, setIsContantOpen] = useState<boolean>(false);
-  const [isAddComp, setIsAddComp] = useState<boolean>(false);
+
   //  Keep active tab in state
   const [activeTab, setActiveTab] = useState(tabs[0].label);
-  const deal = initialDeals.find((deal) => deal.id === slug);
-  if (!deal) {
+  const Lead = initialLeads.find((Lead) => Lead.id === slug);
+  if (!Lead) {
     return notFound;
   }
 
@@ -85,10 +79,10 @@ export default function SingleDeal({ params }: SingleDealProps) {
     return colors[charCode % colors.length];
   }
 
-  const initials = deal.name
-    ? deal.name.charAt(0).toUpperCase()
-    : deal.name
-      ? deal.name.charAt(0).toUpperCase()
+  const initials = Lead.name
+    ? Lead.name.charAt(0).toUpperCase()
+    : Lead.name
+      ? Lead.name.charAt(0).toUpperCase()
       : "?";
 
   const avatarColor = getColorFromText(initials);
@@ -99,7 +93,7 @@ export default function SingleDeal({ params }: SingleDealProps) {
   };
   return (
     <div>
-      <h2 className="mt-4 text-xl font-bold">Deals</h2>
+      <h2 className="mt-4 text-xl font-bold">Leads</h2>
       <div className="mb-4 flex flex-col justify-between md:flex-row">
         <Breadcrumbs labels={labels} homeLabel="Home" />
         <div className="md:max-w-xs">
@@ -123,10 +117,10 @@ export default function SingleDeal({ params }: SingleDealProps) {
       </div>
       <Link
         className="flex w-fit items-center gap-2 pb-4 text-sm text-gray-700 transition-colors hover:text-gray-900"
-        href={"/admin/deals"}
+        href={"/admin/Leads"}
       >
         <MoveLeft size={14} />
-        Back To Deals
+        Back To Leads
       </Link>
       {/* Profile Contact  */}
       <div className="flex flex-wrap justify-between gap-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
@@ -144,7 +138,7 @@ export default function SingleDeal({ params }: SingleDealProps) {
           </div>
           <div className="space-y-1">
             <h2 className="flex items-center gap-1 text-lg font-bold">
-              {deal.name} <Star className="h-4 w-4 text-secondary" />{" "}
+              {Lead.name} <Star className="h-4 w-4 text-secondary" />{" "}
             </h2>
             <p className="flex items-center gap-1 text-sm text-gray-600">
               <Building2 size={15} />
@@ -152,12 +146,12 @@ export default function SingleDeal({ params }: SingleDealProps) {
             </p>
             <p className="flex items-center gap-1 text-sm text-gray-600">
               <MapPin size={15} />
-              {deal.location.country}
+              {Lead.location.country}
             </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          {deal.isPrivate ? (
+          {Lead.isPrivate ? (
             <span className="flex items-center gap-1 rounded-md bg-red-100 px-2 py-1 text-xs text-red-600">
               <LockKeyhole size={12} />
               Private
@@ -183,19 +177,20 @@ export default function SingleDeal({ params }: SingleDealProps) {
       <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-10">
         <div className="h-fit rounded-lg border border-gray-200 bg-white shadow-sm lg:col-span-3">
           <div className="border-b border-gray-200 p-4">
-            <h2 className="mb-2 font-bold">Deals Information</h2>
+            <h2 className="mb-2 font-bold">Lead Information</h2>
             <ul className="space-y-2">
               <li className="grid grid-cols-2 gap-2 text-sm">
                 <p className="text-gray-500">Date Created</p>
-                <p>27 Sep 2025, 11:45 PM</p>
+                <p> {formatDate(Lead.ceatedAt, "MMM dd, yyyy HH:mm")}</p>
               </li>
-              <li className="grid grid-cols-2 gap-2 text-sm">
-                <p className="text-gray-500">Probability - Win</p>
-                <p>80%</p>
-              </li>
+
               <li className="grid grid-cols-2 gap-2 text-sm">
                 <p className="text-gray-500">Deal Value</p>
-                <p>$25,11,145 m</p>
+                <p>{Lead.value}</p>
+              </li>
+              <li className="grid grid-cols-2 gap-2 text-sm">
+                <p className="text-gray-500">Due Date</p>
+                <p>{formatDate(Lead.ceatedAt, "MMM dd, yyyy HH:mm")}</p>
               </li>
               <li className="grid grid-cols-2 gap-2 text-sm">
                 <p className="text-gray-500">Follow Up</p>
@@ -209,41 +204,21 @@ export default function SingleDeal({ params }: SingleDealProps) {
           </div>
           <div className="border-b border-gray-200 p-4">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="mb-2 font-bold">Deal Owner</h2>
-              <button
-                onClick={() => setIsDealOwnerOpen(true)}
-                className="flex items-center gap-1 text-sm text-main"
-              >
-                <PlusCircle size={13} /> Add New
-              </button>
+              <h2 className="mb-2 font-bold">Owner</h2>
             </div>
 
             <div className="flex gap-2">
               <div className="flex flex-col gap-2">
-                {contacts.length > 0 ? (
-                  contacts.slice(0, 3).map((contact, index) => {
-                    return (
-                      <Link
-                        href={`/admin/contacts/${contact.id}`}
-                        key={index}
-                        className={`flex items-center gap-2`}
-                      >
-                        <Image
-                          className="h-8 w-8 rounded-full object-cover"
-                          src={contact.avatar}
-                          width={150}
-                          height={150}
-                          alt={contact.name}
-                        />
-                        <h2 className="text-sm text-gray-700">
-                          {contact.name}
-                        </h2>
-                      </Link>
-                    );
-                  })
-                ) : (
-                  <span className="text-xs text-gray-400">No Deal Owners</span>
-                )}
+                <div className={`flex items-center gap-2`}>
+                  <Image
+                    className="h-7 w-7 rounded-full object-cover"
+                    src={contacts[0].avatar}
+                    width={150}
+                    height={150}
+                    alt={contacts[0].name}
+                  />
+                  <h2 className="text-xs text-gray-700">{contacts[0].name}</h2>
+                </div>
               </div>
             </div>
           </div>
@@ -251,8 +226,8 @@ export default function SingleDeal({ params }: SingleDealProps) {
             <h2 className="mb-2 font-bold">Tags</h2>
             <div className="flex gap-2">
               <div className="flex flex-wrap gap-1">
-                {Array.isArray(deal?.tags) && deal.tags.length > 0 ? (
-                  deal.tags?.map((tag, index) => {
+                {Array.isArray(Lead?.tags) && Lead.tags.length > 0 ? (
+                  Lead.tags?.map((tag, index) => {
                     const colors: Record<string, string> = {
                       Collab: "bg-blue-100 text-blue-800",
                       Promotion: "bg-yellow-100 text-yellow-800",
@@ -290,7 +265,7 @@ export default function SingleDeal({ params }: SingleDealProps) {
           <div className="border-b border-gray-200 p-4">
             <h2 className="mb-2 font-bold">Projects</h2>
             <div className="flex space-x-2">
-              {deal.projects?.map((project, index) => {
+              {Lead.projects?.map((project, index) => {
                 return (
                   <span
                     key={index}
@@ -337,12 +312,12 @@ export default function SingleDeal({ params }: SingleDealProps) {
                     );
                   })
                 ) : (
-                  <span className="text-xs text-gray-400">No Deal Owners</span>
+                  <span className="text-xs text-gray-400">No Lead Owners</span>
                 )}
               </div>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <p className="text-gray-500">Last Modified</p>
-                <p>27 Sep 2025, 11:45 PM</p>
+                <p>{formatDate(Lead.ceatedAt, "MMM dd, yyyy HH:mm")}</p>
               </div>
               <div className="grid grid-cols-2 gap-2 text-sm">
                 <p className="text-gray-500">Modified By</p>
@@ -361,15 +336,14 @@ export default function SingleDeal({ params }: SingleDealProps) {
           </div>
         </div>
         <div className="lg:col-span-7">
-          <PipelineStatus
+          <LeadsPipelineStatus
             stages={[
-              { name: "Quality To Buy", color: "#EF4444" },
-              { name: "Contact Made", color: "#10B985" },
-              { name: "Presentation", color: "#F97316" },
-              { name: "Proposal Made", color: "#3B82F6" },
-              { name: "Appointment", color: "#8B5CF6" },
+              { name: "Not Contacted", color: "#3B82F6" },
+              { name: "Contacted", color: "#10B985" },
+              { name: "Closed", color: "#F97316" },
+              { name: "Lost", color: "#EF4444" },
             ]}
-            title="Deals Pipeline Status"
+            title="Leads Pipeline Status"
           />
           <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
             {/* Tabs navigation */}
@@ -390,60 +364,6 @@ export default function SingleDeal({ params }: SingleDealProps) {
         </div>
       </div>
 
-      <AddCompany
-        title="Add Company"
-        isOpen={isAddComp}
-        setIsOpen={setIsAddComp}
-        dealIsOpen={isDealOpen}
-        setDealIsOpen={setIsDealOpen}
-      />
-      <AddContact
-        title="Edit Contact"
-        isOpen={isContantOpen}
-        setIsOpen={setIsContantOpen}
-        dealIsOpen={isDealOpen}
-        setDealIsOpen={setIsDealOpen}
-        initialValues={{
-          profileImage: [],
-          firstName: "Carol",
-          lastName: "Thomas",
-          JobTitle: "UI/UX Designer",
-          CompantName: "Example Corp",
-          email: "caroltho3@example.com",
-          EmailOptOut: false,
-          phone1: "+1 124547845",
-          phone2: "",
-          Fax: "",
-          Deals: "",
-          DateofBirth: "1990-05-15",
-          Reviews: "",
-          Owner: "Admin",
-          tags: ["Collab", "VIP"],
-          Source: "Website",
-          Industry: "Design",
-          Currency: "USD",
-          Language: "English",
-          Description: "Experienced UI/UX designer.",
-          address: "123 Main Street",
-          Country: "China",
-          "State-Province": "",
-          City: "Beijing",
-          Zipcode: "100000",
-          Facebook: "",
-          Skype: "",
-          Linkedin: "",
-          Twitter: "",
-          Whatsapp: "",
-          Instagram: "",
-          Visibility: "Private",
-        }}
-      />
-      <AddDeal isOpen={isDealOpen} setIsOpen={setIsDealOpen} />
-      <AddDealOwner
-        isOpen={isDealOwnerOpen}
-        setIsOpen={setIsDealOwnerOpen}
-        variant="modal"
-      />
       <AddConracts
         isOpen={isConractsOpen}
         setIsOpen={setIsConractsOpen}

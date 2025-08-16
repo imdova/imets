@@ -1,18 +1,12 @@
-import { Deal } from "@/types/data";
-import {
-  Calendar,
-  Mail,
-  MapPin,
-  MessageSquareMore,
-  Phone,
-  Receipt,
-} from "lucide-react";
+import { Lead } from "@/types/data";
+import { Mail, MapPin, MessageSquareMore, Phone, Receipt } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-interface DealCardProps {
-  deal: Deal;
+interface LeadCardProps {
+  lead: Lead;
+  color?: string;
 }
 
 const colors = [
@@ -31,23 +25,27 @@ function getColorFromText(text: string) {
   return colors[charCode % colors.length];
 }
 
-export const DealCard: React.FC<DealCardProps> = ({ deal }) => {
-  const initials = deal.name
-    ? deal.name.charAt(0).toUpperCase()
-    : deal.name
-      ? deal.name.charAt(0).toUpperCase()
+export const LeadCard: React.FC<LeadCardProps> = ({
+  lead,
+  color = "#eeee",
+}) => {
+  const initials = lead.name
+    ? lead.name.charAt(0).toUpperCase()
+    : lead.name
+      ? lead.name.charAt(0).toUpperCase()
       : "?";
 
   const avatarColor = getColorFromText(initials);
 
   return (
     <div
-      key={deal.id}
-      className="rounded-xl border border-gray-200 bg-white p-4"
+      key={lead.id}
+      className="rounded-xl border border-gray-200 bg-white p-3"
     >
+      <div className="mb-3 h-1 w-full" style={{ backgroundColor: color }}></div>
       {/* Header with Avatar + Amount + Date */}
       <Link
-        href={`/admin/deals/${deal.id}`}
+        href={`/admin/leads/${lead.id}`}
         className="mb-3 flex items-start justify-between"
       >
         <div className="flex items-center gap-3">
@@ -58,7 +56,7 @@ export const DealCard: React.FC<DealCardProps> = ({ deal }) => {
             {initials}
           </div>
           <div>
-            <p className="text-sm">{deal.name}</p>
+            <p className="text-sm">{lead.name}</p>
           </div>
         </div>
       </Link>
@@ -67,56 +65,37 @@ export const DealCard: React.FC<DealCardProps> = ({ deal }) => {
       <div className="my-2 space-y-3 text-sm text-gray-600">
         <div className="flex items-center gap-1">
           <Receipt size={13} />
-          {deal.amount && <p>{deal.amount}</p>}
+          {lead.value && <p>{lead.value}</p>}
         </div>
         <div className="flex items-center gap-1">
           <Mail size={13} />
-          {deal.email && <p>{deal.email}</p>}
+          {lead.email && <p>{lead.email}</p>}
         </div>
         <div className="flex items-center gap-1">
           <Phone size={13} />
-          {deal.phone && <p>{deal.phone}</p>}
+          {lead.phone && <p>{lead.phone}</p>}
         </div>
         <div className="flex items-center gap-1">
           <MapPin size={13} />
-          {deal.location && <p>{deal.location.country}</p>}
+          {lead.location && <p>{lead.location.country}</p>}
         </div>
       </div>
 
-      {/* Name */}
-      {deal.name && (
-        <div className="mt-3 flex items-center justify-between border-b border-gray-200 py-3">
-          <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-3 p-2 py-3">
+        {/* company */}
+        {lead.company && (
+          <Link
+            href={`/admin/companies/${lead.company.id}`}
+            className="flex items-center justify-between"
+          >
             <Image
-              className="h-7 w-7 rounded-full object-cover"
-              src={deal.contact.avatar}
+              className="h-6 w-6 rounded-full object-cover"
+              src={lead.company.avatar}
               width={100}
               height={100}
-              alt={deal.contact.name}
+              alt={lead.company.name}
             />
-            <p className="text-sm font-medium text-gray-800">
-              {deal.contact.name}
-            </p>
-          </div>
-          <span
-            className={`rounded-lg px-2 py-1 text-xs font-bold text-white ${
-              deal.property >= 75
-                ? "bg-green-600"
-                : deal.property >= 50
-                  ? "bg-yellow-500"
-                  : "bg-red-500"
-            }`}
-          >
-            {deal.property}%
-          </span>
-        </div>
-      )}
-      <div className="flex items-center justify-between gap-3 p-2">
-        {deal.expecteDate && (
-          <div className="flex items-center gap-1 text-sm text-gray-700">
-            <Calendar size={13} />
-            {deal.expecteDate}
-          </div>
+          </Link>
         )}
         {/* Social/Contact Links */}
         <div className="flex space-x-3">

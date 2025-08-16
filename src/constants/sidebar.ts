@@ -1,6 +1,7 @@
 import { SidebarGroup } from "@/types";
 import {
   Bell,
+  Building2,
   LayoutDashboard,
   MessageSquareWarning,
   Shell,
@@ -53,6 +54,12 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
           href: "/admin/contacts",
           pattern: "/admin/contacts/*",
           icon: UserSearch,
+        },
+        {
+          title: "Companies",
+          href: "/admin/companies",
+          pattern: "/admin/companies/*",
+          icon: Building2,
         },
         {
           title: "Deals",

@@ -16,11 +16,13 @@ export type FieldType =
   | "text-editor"
   | "toggle"
   | "field-group"
-  | "conditional-group";
+  | "conditional-group"
+  | "user-multi-select";
 
 export interface FormFieldOption {
   value: string;
   label: string;
+  image?: string;
 }
 
 interface BaseFormField<T extends string> {
@@ -54,7 +56,12 @@ export interface TextFormField<T extends string> extends BaseFormField<T> {
 }
 
 export interface SelectFormField<T extends string> extends BaseFormField<T> {
-  type: "select" | "multi-select" | "radio" | "conditional-group";
+  type:
+    | "select"
+    | "multi-select"
+    | "radio"
+    | "conditional-group"
+    | "user-multi-select";
   options: FormFieldOption[];
   isMulti?: boolean;
 }
@@ -157,6 +164,7 @@ export interface FormDrawerProps<T extends FieldValues> {
   submitText?: string;
   cancelText?: string;
   loading?: boolean;
+  minHight?: number;
 }
 
 export type FieldValueType<T extends FieldType> = T extends "toggle"

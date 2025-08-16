@@ -1,7 +1,6 @@
 "use client";
 import { FilterBar } from "@/components/filters/FilterBar";
 import Breadcrumbs from "@/components/UI/Breadcrumbs";
-import DynamicCard from "@/components/UI/cards/DynamicCard";
 import Dropdown from "@/components/UI/Dropdown";
 import DynamicTable from "@/components/UI/DTable";
 import Pagination from "@/components/UI/Pagination";
@@ -16,72 +15,49 @@ import {
   MessageSquareMore,
   Phone,
   Sheet,
-  Star,
   Trash2,
 } from "lucide-react";
 import Image from "next/image";
 import { Suspense, useState } from "react";
-import { Flag } from "@/components/UI/Flag";
 import Link from "next/link";
 import AddDeal from "@/components/forms/AddDeal";
-import AddContact from "@/components/forms/AddContact";
-import { Contact } from "@/types/data";
-import { contacts } from "@/constants/contacts";
+import AddCompany from "@/components/forms/AddCompany";
+import { Company } from "@/types/data";
+import { companies } from "@/constants/companies";
+import DynamicCard from "@/components/UI/cards/DynamicCard";
 
 const labels = {
-  "/contacts": "Contacts",
+  "/companies": "Companies",
 };
 
-const projectFilters: FilterOption[] = [
+const companyFilters: FilterOption[] = [
   {
     id: "status",
     name: "Status",
     options: [
       { value: "active", label: "Active" },
-      { value: "completed", label: "Completed" },
-      { value: "on-hold", label: "On Hold" },
+      { value: "inactive", label: "Inactive" },
+      { value: "prospect", label: "Prospect" },
     ],
   },
   {
-    id: "priority",
-    name: "Priority",
+    id: "industry",
+    name: "Industry",
     options: [
-      { value: "high", label: "High" },
-      { value: "medium", label: "Medium" },
-      { value: "low", label: "Low" },
+      { value: "technology", label: "Technology" },
+      { value: "finance", label: "Finance" },
+      { value: "healthcare", label: "Healthcare" },
+      { value: "manufacturing", label: "Manufacturing" },
+      { value: "retail", label: "Retail" },
     ],
   },
   {
-    id: "users",
-    name: "Users",
+    id: "size",
+    name: "Company Size",
     options: [
-      {
-        value: "john-doe",
-        label: "John Doe",
-        avatar:
-          "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
-      },
-      {
-        value: "jane-smith",
-        label: "Jane Smith",
-        avatar:
-          "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
-      },
-      {
-        value: "michael-lee",
-        label: "Michael Lee",
-        avatar:
-          "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
-      },
-    ],
-  },
-  {
-    id: "contacts",
-    name: "Contacts",
-    options: [
-      { value: "email", label: "Email" },
-      { value: "phone", label: "Phone" },
-      { value: "whatsapp", label: "WhatsApp" },
+      { value: "small", label: "Small (1-50)" },
+      { value: "medium", label: "Medium (51-500)" },
+      { value: "large", label: "Large (501+)" },
     ],
   },
   {
@@ -97,36 +73,47 @@ const projectFilters: FilterOption[] = [
   },
 ];
 
-export default function ContactPage() {
+export default function CompanyPage() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [dealIsOpen, setDealIsOpen] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const columns = [
     {
       key: "name",
-      header: "Name",
-      render: (item: Contact) => (
+      header: "Company",
+      render: (item: Company) => (
         <Link
-          href={`/admin/contacts/${item.id}`}
-          className="flex items-center gap-2"
+          href={`/admin/companies/${item.id}`}
+          className="flex items-center gap-3"
         >
           <Image
-            src={item.avatar}
+            src={item.avatar || "/placeholder.png"}
             width={200}
             height={100}
-            className="h-10 w-10 rounded-full object-cover"
+            className="h-8 w-8 rounded-full object-contain"
             alt={item.name}
           />
-          <span className="text-sm text-gray-600">{item.name}</span>
+          <div>
+            <span className="block text-sm font-medium text-gray-800">
+              {item.name}
+            </span>
+            <span className="block text-xs text-gray-500">{item.industry}</span>
+          </div>
         </Link>
       ),
       sortable: true,
     },
-    { key: "phone", header: "Phone" },
+    {
+      key: "email",
+      header: "Email",
+      render: (item: Company) => (
+        <span className="text-sm text-gray-600">{item.email || "-"}</span>
+      ),
+    },
     {
       key: "tags",
       header: "Tags",
-      render: (item: Contact) => (
+      render: (item: Company) => (
         <div className="flex flex-wrap gap-1">
           {item.tags.length > 0 ? (
             item.tags.map((tag, index) => {
@@ -151,29 +138,28 @@ export default function ContactPage() {
       ),
     },
     {
-      key: "location",
-      header: "Location",
-      render: (item: Contact) => (
-        <div className="flex items-center gap-2">
-          <Flag countryCode={item.location.countryCode} />
-          <p className="text-sm">{item.location.country}</p>
-        </div>
-      ),
-    },
-    {
-      key: "rating",
-      header: "Rating",
-      render: (item: Contact) => (
-        <div className="flex items-center gap-2">
-          <Star className="h-4 w-4 text-secondary" />
-          <p className="text-sm text-gray-700">{item.rating}</p>
-        </div>
+      key: "owner",
+      header: "Owner",
+      render: (item: Company) => (
+        <Link
+          href={`/admin/contacts/${item.owner.id}`}
+          className="flex items-center gap-2"
+        >
+          <Image
+            src={item.owner?.avatar || "/placeholder.png"}
+            width={100}
+            height={100}
+            className="h-8 w-8 rounded-full object-cover"
+            alt={`${item.owner?.name}'s avatar`}
+          />
+          <span className="text-xs text-gray-600">{item.owner?.name}</span>
+        </Link>
       ),
     },
     {
       key: "contact",
       header: "Contact",
-      render: (item: Contact) => (
+      render: (item: Company) => (
         <div className="flex space-x-2 px-4">
           <Link href="#" className="text-gray-400 hover:text-secondary">
             <Mail className="h-3.5 w-3.5" />
@@ -196,12 +182,14 @@ export default function ContactPage() {
     {
       key: "status",
       header: "Status",
-      render: (item: Contact) => (
+      render: (item: Company) => (
         <span
           className={`rounded-full px-2 py-1 text-xs font-semibold ${
             item.status === "active"
               ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
+              : item.status === "inactive"
+                ? "bg-red-100 text-red-800"
+                : "bg-gray-100 text-gray-800"
           }`}
         >
           {item.status === "active" ? "Active" : "Inactive"}
@@ -217,19 +205,19 @@ export default function ContactPage() {
           {
             label: "Edit",
             icon: <Edit size={16} />,
-            onClick: (item: Contact) => alert(`Edit ${item.name}`),
+            onClick: (item: Company) => alert(`Edit ${item.name}`),
             divider: true,
           },
           {
             label: "View",
             icon: <Eye size={16} />,
-            onClick: (item: Contact) => alert(`View ${item.name}`),
+            onClick: (item: Company) => alert(`View ${item.name}`),
             divider: true,
           },
           {
             label: "Delete",
             icon: <Trash2 size={16} />,
-            onClick: (item: Contact) => alert(`Delete ${item.name}`),
+            onClick: (item: Company) => alert(`Delete ${item.name}`),
           },
         ],
       },
@@ -238,7 +226,7 @@ export default function ContactPage() {
 
   return (
     <div>
-      <h2 className="mt-4 text-xl font-bold">Contacts</h2>
+      <h2 className="mt-4 text-xl font-bold">Companies</h2>
       <div className="mb-4 flex flex-col justify-between md:flex-row">
         <Breadcrumbs labels={labels} homeLabel="Home" />
         <div className="md:max-w-xs">
@@ -252,7 +240,7 @@ export default function ContactPage() {
                 onClick: () => console.log("PDF"),
               },
               {
-                label: "Export As PDF",
+                label: "Export As Excel",
                 icon: <Sheet size={16} />,
                 onClick: () => console.log("Excel"),
               },
@@ -262,19 +250,19 @@ export default function ContactPage() {
       </div>
       <Suspense>
         <FilterBar
-          filters={projectFilters}
+          filters={companyFilters}
           showFilters
           showSearch
           showBtnAdd
           viewMode={viewMode}
           onViewModeChange={setViewMode}
-          placeholder="Search projects..."
-          BtnAdd={{ label: "Add Contact", onClick: () => setIsOpen(true) }}
+          placeholder="Search companies..."
+          BtnAdd={{ label: "Add Company", onClick: () => setIsOpen(true) }}
           sortOptions={[
             { value: "name-asc", label: "Name (A-Z)" },
             { value: "name-desc", label: "Name (Z-A)" },
-            { value: "date-asc", label: "Date (Oldest first)" },
-            { value: "date-desc", label: "Date (Newest first)" },
+            { value: "employees-asc", label: "Employees (Fewest first)" },
+            { value: "employees-desc", label: "Employees (Most first)" },
           ]}
           defaultSort="name-asc"
           showSort={viewMode === "list"}
@@ -285,16 +273,17 @@ export default function ContactPage() {
       {viewMode === "grid" && (
         <>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {contacts.map((contact, index) => (
+            {companies.map((company, index) => (
               <DynamicCard
                 key={index}
-                name={contact.name}
-                role={contact.role}
-                email={contact.email}
-                phone={contact.phone}
-                country={contact.location.country}
-                avatar={contact.avatar}
-                id={contact.id}
+                name={company.name}
+                country={company.location.country}
+                avatar={company.avatar || "/placeholder.png"}
+                id={company.id}
+                owner={company.owner}
+                email={company.email}
+                phone={company.phone}
+                isCompany
               />
             ))}
           </div>
@@ -304,7 +293,7 @@ export default function ContactPage() {
       {viewMode === "list" && (
         <Suspense>
           <DynamicTable
-            data={contacts}
+            data={companies}
             columns={columns}
             pagination
             itemsPerPage={5}
@@ -314,7 +303,7 @@ export default function ContactPage() {
           />
         </Suspense>
       )}
-      <AddContact
+      <AddCompany
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         dealIsOpen={dealIsOpen}

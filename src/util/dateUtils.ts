@@ -1,9 +1,11 @@
 // utils/dateUtils.ts
 export const formatDate = (
-  date: Date | null,
+  dateInput: Date | string | undefined | null,
   formatStr: string = "MMM dd, yyyy",
 ) => {
-  if (!date) return "";
+  if (!dateInput) return "";
+
+  const date = typeof dateInput === "string" ? new Date(dateInput) : dateInput;
 
   const monthsFull = [
     "January",
@@ -33,7 +35,15 @@ export const formatDate = (
     "Nov",
     "Dec",
   ];
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const pad = (num: number) => num.toString().padStart(2, "0");
 
@@ -43,7 +53,7 @@ export const formatDate = (
     .replace(/MMMM/g, monthsFull[date.getMonth()])
     .replace(/MMM/g, monthsShort[date.getMonth()])
     .replace(/MM/g, pad(date.getMonth() + 1))
-    .replace(/M(?![a-zA-Z])/g, (date.getMonth() + 1).toString()) // يمنع التطابق مع MMM
+    .replace(/M(?![a-zA-Z])/g, (date.getMonth() + 1).toString())
     .replace(/dd/g, pad(date.getDate()))
     .replace(/d(?![a-zA-Z])/g, date.getDate().toString())
     .replace(/HH/g, pad(date.getHours()))

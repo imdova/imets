@@ -16,7 +16,7 @@ import {
 import OptionsDropdown from "@/components/UI/OptionsDropdown";
 import AddDeal from "@/components/forms/AddDeal";
 import { Deal } from "@/types/data";
-import { initialDeals, stageGroups } from "@/constants/deals";
+import { initialDeals, stageGroupsDeals } from "@/constants/deals";
 import Link from "next/link";
 
 const labels = {
@@ -296,7 +296,7 @@ export default function DealPage() {
       {viewMode === "grid" && (
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex gap-4 overflow-x-auto pb-4">
-            {stageGroups.map((group) => (
+            {stageGroupsDeals.map((group) => (
               <Droppable key={group.id} droppableId={group.id}>
                 {(provided) => (
                   <div
@@ -310,15 +310,8 @@ export default function DealPage() {
                         <div>
                           <div className="flex items-center gap-2">
                             <span
-                              className={`h-2 w-2 rounded-full ${
-                                group.id === "qualify"
-                                  ? "bg-blue-500"
-                                  : group.id === "contact"
-                                    ? "bg-purple-500"
-                                    : group.id === "presentation"
-                                      ? "bg-yellow-500"
-                                      : "bg-green-500"
-                              }`}
+                              className="h-2 w-2 rounded-full"
+                              style={{ backgroundColor: group.color }}
                             ></span>
                             <h3 className="text-base font-bold">
                               {group.title}

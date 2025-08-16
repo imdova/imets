@@ -7,12 +7,12 @@ interface PipelineStage {
   badgeColor?: string; // Optional badge color (defaults to auto-calculated)
 }
 
-interface DealsPipelineStatusProps {
+interface PipelineStatusProps {
   stages?: PipelineStage[];
   title?: string;
 }
 
-const DealsPipelineStatus: React.FC<DealsPipelineStatusProps> = ({
+const PipelineStatus: React.FC<PipelineStatusProps> = ({
   stages: propStages,
   title = "Deals Pipeline Status",
 }) => {
@@ -119,4 +119,4 @@ const DealsPipelineStatus: React.FC<DealsPipelineStatusProps> = ({
   );
 };
 
-export default DealsPipelineStatus;
+export default PipelineStatus;
