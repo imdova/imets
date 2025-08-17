@@ -17,6 +17,7 @@ export type FieldType =
   | "toggle"
   | "field-group"
   | "conditional-group"
+  | "list"
   | "user-multi-select";
 
 export interface FormFieldOption {
@@ -48,7 +49,7 @@ interface BaseFormField<T extends string> {
 }
 
 export interface TextFormField<T extends string> extends BaseFormField<T> {
-  type: "text" | "email" | "textarea";
+  type: "text" | "email" | "textarea" | "list";
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
@@ -62,6 +63,7 @@ export interface SelectFormField<T extends string> extends BaseFormField<T> {
     | "radio"
     | "conditional-group"
     | "user-multi-select";
+
   options: FormFieldOption[];
   isMulti?: boolean;
 }
@@ -104,6 +106,8 @@ interface ConditionalFieldGroup {
   min?: number;
   max?: number;
   accept?: string;
+  isMulti?: boolean; // For multi-select fields
+  grid?: { xs?: number; sm?: number; md?: number; lg?: number };
 }
 
 interface DynamicField {
@@ -117,6 +121,8 @@ interface DynamicField {
   min?: number;
   max?: number;
   accept?: string; // For file inputs
+  isMulti?: boolean; // For multi-select fields
+  grid?: { xs?: number; sm?: number; md?: number; lg?: number };
 }
 
 export interface ConditionalGroupFormField<T extends string>

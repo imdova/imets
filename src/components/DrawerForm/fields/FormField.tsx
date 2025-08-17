@@ -20,6 +20,7 @@ import { RadioGroup } from "./RadioGroup";
 import Link from "next/link";
 import { Plus, PlusCircle, Trash2 } from "lucide-react";
 import { UserMultiSelect } from "./UserMultiSelect";
+import { ListsField } from "./ListField";
 
 interface FormFieldProps<T extends FieldValues> {
   field: FormField<Path<T>>;
@@ -203,45 +204,68 @@ export const FormFieldRenderer = <T extends FieldValues>({
                     <div key={index} className="flex items-end gap-4">
                       <div className="grid flex-1 grid-cols-2 gap-4">
                         {currentFields.map((subField) => (
-                          <Controller
-                            key={`${subField.name}-${index}`}
-                            name={
-                              `${field.name}.items.${index}.${subField.name}` as Path<T>
-                            }
-                            control={form.control}
-                            rules={{
-                              required: subField.required
-                                ? subField.errorMessage ||
-                                  `${subField.label} is required`
-                                : false,
-                            }}
-                            render={({ field: controllerField }) => (
-                              <div className="flex flex-col">
-                                {index === 0 && (
-                                  <label className="block text-sm font-medium text-gray-700">
-                                    {subField.label}
-                                    {subField.required && (
-                                      <span className="text-red-500">*</span>
-                                    )}
-                                  </label>
-                                )}
+                          <div
+                            className={`${subField.type !== "text" && "col-span-2"}`}
+                            key={subField.name}
+                          >
+                            <Controller
+                              key={`${subField.name}-${index}`}
+                              name={
+                                `${field.name}.items.${index}.${subField.name}` as Path<T>
+                              }
+                              control={form.control}
+                              rules={{
+                                required: subField.required
+                                  ? subField.errorMessage ||
+                                    `${subField.label} is required`
+                                  : false,
+                              }}
+                              render={({ field: controllerField }) => (
+                                <div className="flex flex-col">
+                                  {index === 0 && (
+                                    <label className="block text-sm font-medium text-gray-700">
+                                      {subField.label}
+                                      {subField.required && (
+                                        <span className="text-red-500">*</span>
+                                      )}
+                                    </label>
+                                  )}
 
-                                <TextField
-                                  field={{
-                                    ...subField,
-                                    name: `${field.name}.items.${index}.${subField.name}` as Path<T>,
-                                    label: index === 0 ? subField.label : ``,
-                                    type: subField.type as
-                                      | "text"
-                                      | "email"
-                                      | "textarea",
-                                  }}
-                                  form={form}
-                                  {...controllerField}
-                                />
-                              </div>
-                            )}
-                          />
+                                  {subField.type === "text" ? (
+                                    <TextField
+                                      field={{
+                                        ...subField,
+                                        name: `${field.name}.items.${index}.${subField.name}` as Path<T>,
+                                        label:
+                                          index === 0 ? subField.label : ``,
+                                        type: subField.type as
+                                          | "text"
+                                          | "email"
+                                          | "textarea",
+                                      }}
+                                      form={form}
+                                      {...controllerField}
+                                    />
+                                  ) : (
+                                    <UserMultiSelect
+                                      field={{
+                                        ...subField,
+                                        name: `${field.name}.items.${index}.${subField.name}` as Path<T>,
+                                        label:
+                                          index === 0 ? subField.label : ``,
+                                        type: subField.type as "multi-select",
+                                        options:
+                                          "options" in subField
+                                            ? (subField.options ?? [])
+                                            : [],
+                                      }}
+                                      {...controllerField}
+                                    />
+                                  )}
+                                </div>
+                              )}
+                            />
+                          </div>
                         ))}
                       </div>
                       {index > 0 && (
@@ -253,15 +277,16 @@ export const FormFieldRenderer = <T extends FieldValues>({
                           <Trash2 size={13} />
                         </button>
                       )}
-                      {index === 0 && (
-                        <button
-                          type="button"
-                          onClick={handleAddItem}
-                          className="pb-3 text-secondary"
-                        >
-                          <PlusCircle size={13} />
-                        </button>
-                      )}
+                      {index === 0 &&
+                        currentFields[0]?.type !== "user-multi-select" && (
+                          <button
+                            type="button"
+                            onClick={handleAddItem}
+                            className="pb-3 text-secondary"
+                          >
+                            <PlusCircle size={13} />
+                          </button>
+                        )}
                     </div>
                   );
                 },
@@ -364,6 +389,15 @@ export const FormFieldRenderer = <T extends FieldValues>({
               value={value}
               onChange={onChange}
             />
+          )}
+        />
+      ) : field.type === "list" ? (
+        <Controller
+          name={field.name as Path<T>}
+          control={form.control}
+          rules={validationRules}
+          render={({ field: {} }) => (
+            <ListsField<T> form={form} fields={field} />
           )}
         />
       ) : field.type === "text-editor" ? (

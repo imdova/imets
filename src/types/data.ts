@@ -79,3 +79,17 @@ export interface Lead {
   isPrivate?: boolean; // Optional field to indicate if the lead is private
   projects?: string[];
 }
+
+export type PipelineStage = "win" | "inPipeline" | "conversation" | "lost";
+
+export interface Pipeline {
+  id: string;
+  name: string;
+  totalValue: number;
+  dealCount: number;
+  stages: PipelineStage;
+  createdAt: string;
+  updatedAt?: string;
+  status: "active" | "inactive" | "draft";
+  description?: string;
+}
