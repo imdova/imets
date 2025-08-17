@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
 
 type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
@@ -94,10 +95,12 @@ const DynamicModal = ({
         >
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between bg-gradient-to-r from-main to-purple-600 px-4 py-3 sm:px-6">
+            <div
+              className={`flex items-center ${!title ? "justify-end" : "justify-between"} p-4 sm:px-6`}
+            >
               {title && (
                 <h3
-                  className="text-lg font-medium leading-6 text-white"
+                  className="text-lg font-medium leading-6 text-main"
                   id="modal-title"
                 >
                   {title}
@@ -106,25 +109,11 @@ const DynamicModal = ({
               {showCloseButton && (
                 <button
                   type="button"
-                  className="text-white hover:text-gray-200 focus:outline-none"
+                  className="text-main focus:outline-none"
                   onClick={onClose}
                 >
                   <span className="sr-only">Close</span>
-                  <svg
-                    className="h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <X size={20} />
                 </button>
               )}
             </div>

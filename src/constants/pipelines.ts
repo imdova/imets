@@ -1,0 +1,58 @@
+import { Pipeline } from "@/types/data";
+
+export const pipelines: Pipeline[] = [
+  {
+    id: "1",
+    name: "Enterprise Sales",
+    totalValue: 1250000,
+    dealCount: 24,
+    stages: "win",
+    createdAt: "2023-01-15",
+    status: "active",
+  },
+  {
+    id: "2",
+    name: "SMB Sales",
+    totalValue: 450000,
+    dealCount: 42,
+    stages: "lost",
+    createdAt: "2023-03-22",
+    status: "active",
+  },
+  {
+    id: "3",
+    name: "Partnership Deals",
+    totalValue: 750000,
+    dealCount: 8,
+    stages: "lost",
+    createdAt: "2023-05-10",
+    status: "active",
+  },
+  {
+    id: "4",
+    name: "Marketing Leads",
+    totalValue: 320000,
+    dealCount: 35,
+    stages: "win",
+    createdAt: "2023-02-18",
+    status: "inactive",
+  },
+  {
+    id: "5",
+    name: "Renewals",
+    totalValue: 890000,
+    dealCount: 15,
+    stages: "inPipeline",
+    createdAt: "2023-06-05",
+    status: "active",
+  },
+  {
+    id: "6",
+    name: "New Product Pipeline",
+    totalValue: 0,
+    dealCount: 0,
+    stages: "conversation",
+    createdAt: "2023-07-12",
+    status: "draft",
+  },
+];

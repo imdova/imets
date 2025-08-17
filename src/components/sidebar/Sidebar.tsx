@@ -57,7 +57,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
   useEffect(() => {
     const newOpenItems: Record<string, boolean> = {};
 
-    groups.forEach((group) => {
+    groups?.forEach((group) => {
       group.items.forEach((item) => {
         if (item.subItems) {
           const shouldOpen = item.subItems.some((subItem) =>
@@ -135,7 +135,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
             {isMobile && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className={`p-1 ${!expanded && "bg-secondary absolute left-12 top-2 rounded-full p-2 text-white"} md:hidden`}
+                className={`p-1 ${!expanded && "absolute left-12 top-2 rounded-full bg-secondary p-2 text-white"} md:hidden`}
               >
                 {expanded ? (
                   <ArrowLeftToLine size={12} />
@@ -152,7 +152,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
             initial="hidden"
             animate="show"
           >
-            {groups.map((group, groupIndex) => (
+            {groups?.map((group, groupIndex) => (
               <motion.div
                 key={groupIndex}
                 className="mb-4"
@@ -174,11 +174,11 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                       const Icon = item.icon;
                       const hasSubItems = item?.subItems?.length ?? 0 > 0;
                       const isOpen = openItems[item.href];
-                      const isCurrent = isCurrentPage(pathname, item.href);
+                      const isCurrent = isCurrentPage(pathname, item?.pattern);
                       const isAnySubItemCurrent =
                         hasSubItems &&
                         item.subItems?.some((subItem) =>
-                          isCurrentPage(pathname, subItem.href),
+                          isCurrentPage(pathname, subItem.pattern),
                         );
                       const isActiveDropdown = activeDropdown === item.href;
 
@@ -258,7 +258,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                                                 className={`flex items-center gap-2 rounded px-3 py-2 text-sm ${
                                                   isCurrentPage(
                                                     pathname,
-                                                    subItem.href,
+                                                    subItem.pattern,
                                                   )
                                                     ? "font-medium text-main"
                                                     : "text-gray-600 hover:text-gray-800"
@@ -299,7 +299,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                                                 className={`flex cursor-pointer items-center gap-2 px-4 py-2 text-sm ${
                                                   isCurrentPage(
                                                     pathname,
-                                                    subItem.href,
+                                                    subItem.pattern,
                                                   )
                                                     ? `bg-main-transparent font-medium text-main`
                                                     : "text-gray-700 hover:bg-gray-100"
@@ -375,6 +375,8 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                   backgroundColor: "rgba(254, 226, 226)",
                 }}
                 whileTap={{ scale: 0.98 }}
+                onHoverStart={() => setHoveredItem("signout")}
+                onHoverEnd={() => setHoveredItem(null)}
               >
                 <Power size={15} />
                 {expanded && "sign out"}

@@ -1,3 +1,6 @@
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 /**
  * Checks if the current pathname matches the given pattern, supporting:
  * - Exact matches
@@ -17,26 +20,17 @@ export const isCurrentPage = (pathname: string, pattern: string): boolean => {
   // Handle exact matches first (after decoding)
   if (decodedPathname === decodedPattern) return true;
 
-  // Convert Next.js dynamic route pattern to regex
-  let regexPattern = decodedPattern
-    // Replace optional catch-all segments
-    .replace(/\[\[\.\.\.(.*?)]]/g, "(?:/(.*))?")
-    // Replace catch-all segments
-    .replace(/\[\.\.\.(.*?)]/g, "(?:/(.*))")
-    // Replace dynamic segments
-    .replace(/\[(.*?)]/g, "([^/]+)")
-    // Escape special regex characters
-    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-    // Convert to regex pattern
-    .replace(/\//g, "\\/");
-
-  // Handle wildcard patterns
-  if (regexPattern.includes("*")) {
-    regexPattern = regexPattern.replace(/\*/g, ".*");
+  // Special case: if pattern ends with /*, match all subroutes
+  if (decodedPattern.endsWith("/*")) {
+    const basePattern = decodedPattern.slice(0, -2);
+    if (decodedPathname === basePattern) return true;
+    return decodedPathname.startsWith(basePattern + "/");
   }
 
-  // Create regex with start/end anchors
-  const routeRegex = new RegExp(`^${regexPattern}$`);
-
-  return routeRegex.test(decodedPathname);
+  // For all other cases, require exact match
+  return false;
 };
+
+export function cn(...inputs: Parameters<typeof clsx>) {
+  return twMerge(clsx(...inputs));
+}
