@@ -1,0 +1,148 @@
+import { Contact } from "@/types/data";
+
+export const contacts: Contact[] = [
+  {
+    id: "1",
+    name: "Carol Thomas",
+    role: "UI/UX Designer",
+    email: "caroltho3@example.com",
+    phone: "+1 124547845",
+    location: {
+      country: "China",
+      countryCode: "cn",
+      city: "",
+    },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: true,
+  },
+  {
+    id: "2",
+    name: "Jonathan Smith",
+    role: "Team Lead Dev",
+    email: "jonathan@example.com",
+    phone: "+1 321454789",
+    location: {
+      country: "Egypt",
+      countryCode: "eg",
+      city: "",
+    },
+    rating: "4.6",
+    status: "inactive",
+    tags: ["Promotion"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
+  },
+  {
+    id: "3",
+    name: "Dawn Mercha",
+    role: "Technician",
+    email: "dawmmercha@example.com",
+    phone: "+1 478845447",
+    location: {
+      country: "Martin Lewis",
+      countryCode: "co",
+      city: "",
+    },
+    rating: "4.6",
+    status: "active",
+    tags: ["Promotion"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
+  },
+  {
+    id: "4",
+    name: "Brook Carter",
+    role: "Team Lead Dev",
+    email: "brook@example.com",
+    phone: "+1 278907145",
+    location: {
+      country: "Colombia",
+      countryCode: "co",
+      city: "",
+    },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
+  },
+  {
+    id: "5",
+    name: "Rachel Hampton",
+    role: "Software Developer",
+    email: "rachel@example.com",
+    phone: "+1 215544845",
+    location: {
+      country: "Indonesia",
+      countryCode: "id",
+      city: "",
+    },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
+  },
+  {
+    id: "6",
+    name: "Eric Adams",
+    role: "HR Manager",
+    email: "ericadams@example.com",
+    phone: "+1 19023-78104",
+    location: {
+      country: "France",
+      countryCode: "fr",
+      city: "",
+    },
+    rating: "4.6",
+    status: "active",
+    tags: ["VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
+  },
+  {
+    id: "7",
+    name: "Jonelle Curtiss",
+    role: "Supervisor",
+    email: "jonelle@example.com",
+    phone: "+1 121145471",
+    location: {
+      country: "Cuba",
+      countryCode: "cu",
+      city: "",
+    },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
+  },
+  {
+    id: "8",
+    name: "Richard Cooper",
+    role: "Devops Engineer",
+    email: "richard@example.com",
+    phone: "+1 18902-63904",
+    location: {
+      country: "Belgium",
+      countryCode: "be",
+      city: "",
+    },
+    rating: "4.6",
+    status: "active",
+    tags: ["Collab", "VIP"],
+    avatar:
+      "https://img.freepik.com/free-photo/happy-smiling-man-with-blond-hair-beard-looking-camera-standing-grey-t-shirt-isolated-white-background_176420-48216.jpg?ga=GA1.1.1965666118.1751817128&semt=ais_hybrid&w=740&q=80",
+    isPrivate: false,
+  },
+];
