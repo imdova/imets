@@ -66,6 +66,7 @@ export interface SelectFormField<T extends string> extends BaseFormField<T> {
 
   options: FormFieldOption[];
   isMulti?: boolean;
+  isDropDown?: boolean;
 }
 
 export interface FileFormField<T extends string> extends BaseFormField<T> {

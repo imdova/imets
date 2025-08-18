@@ -357,7 +357,7 @@ const TaskManagement = () => {
         </Suspense>
       </div>
       <div className="overflow-x-auto">
-        <div className="min-w-[600px]">
+        <div className="min-w-[600px] space-y-3">
           <DragDropContext onDragEnd={onDragEnd}>
             {Object.entries(groupedTasks).map(([groupName, groupTasks]) => {
               // Determine the border color based on the group name

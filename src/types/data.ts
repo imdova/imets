@@ -93,3 +93,31 @@ export interface Pipeline {
   status: "active" | "inactive" | "draft";
   description?: string;
 }
+
+export type ProjectStatus = "active" | "inactive";
+export type ProjectPriority = "high" | "medium" | "low";
+export type ProjectCategory = "website" | "mobile" | "branding" | "marketing";
+
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  status: ProjectStatus;
+  priority: ProjectPriority;
+  startDate: string; // ISO format "YYYY-MM-DD"
+  endDate: string; // ISO format "YYYY-MM-DD"
+  progress: number; // 0-100
+  team: string[];
+  value: string;
+  category: ProjectCategory;
+  budget: number;
+  users: Contact[];
+  teamLeader: Contact;
+  client: Company;
+  hours: number;
+  isPrivate: boolean;
+  pipelineStage: PipelineStage;
+  avatar: string; // URL to image
+  createdAt?: string; // Optional for sorting
+  updatedAt?: string; // Optional for tracking changes
+}
