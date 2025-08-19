@@ -205,7 +205,11 @@ export const FormFieldRenderer = <T extends FieldValues>({
                       <div className="grid flex-1 grid-cols-2 gap-4">
                         {currentFields.map((subField) => (
                           <div
-                            className={`${subField.type !== "text" && "col-span-2"}`}
+                            className={`${
+                              !["text", "email", "textarea"].includes(
+                                subField.type,
+                              ) && "col-span-2"
+                            }`}
                             key={subField.name}
                           >
                             <Controller
@@ -230,8 +234,9 @@ export const FormFieldRenderer = <T extends FieldValues>({
                                       )}
                                     </label>
                                   )}
-
-                                  {subField.type === "text" ? (
+                                  {["text", "email", "textarea"].includes(
+                                    subField.type,
+                                  ) && (
                                     <TextField
                                       field={{
                                         ...subField,
@@ -246,14 +251,16 @@ export const FormFieldRenderer = <T extends FieldValues>({
                                       form={form}
                                       {...controllerField}
                                     />
-                                  ) : (
+                                  )}
+
+                                  {subField.type === "user-multi-select" && (
                                     <UserMultiSelect
                                       field={{
                                         ...subField,
                                         name: `${field.name}.items.${index}.${subField.name}` as Path<T>,
                                         label:
                                           index === 0 ? subField.label : ``,
-                                        type: subField.type as "multi-select",
+                                        type: "multi-select",
                                         options:
                                           "options" in subField
                                             ? (subField.options ?? [])
@@ -420,6 +427,7 @@ export const FormFieldRenderer = <T extends FieldValues>({
               value={value}
               onChange={onChange}
               placeholder={field.placeholder}
+              isDropdown={field.isDropDown}
             />
           )}
         />

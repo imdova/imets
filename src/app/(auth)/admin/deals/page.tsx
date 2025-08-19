@@ -75,7 +75,7 @@ const actions: DropdownAction[] = [
 
 export default function DealPage() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [deals, setDeals] = useState<Deal[]>(initialDeals);
 
   const columns = [

@@ -5,20 +5,24 @@ import { contacts } from "@/constants/contacts";
 import { UserPlus } from "lucide-react";
 
 // Define your form values type
-type TaskFormValues = {
-  TaskTitle: string; // text
+type ProjectFormValues = {
+  name: string; // text
+  id: string; // text
+  project_type: "VIP" | "ColabX" | "ColabY" | "ColabZ"; // select
+  client: string[]; // multi-select
   category: "VIP" | "ColabX" | "ColabY" | "ColabZ"; // select
+  project_timing: "VIP" | "ColabX" | "ColabY" | "ColabZ"; // select
+  price: string; // text
   responsible_persons: string[]; // user-multi-select
+  team_leader: string[]; // user-multi-select
   startDate: string; // date
   dueDate: string; // date
-  tags: string[]; // multi-select
-  Phone: string; // phone
   priority: "Home" | "Work"; // select
   Status: "VIP" | "Work"; // select
   Description: string; // text-editor
 };
 
-export default function AddTask({
+export default function AddProject({
   isOpen,
   setIsOpen,
   variant,
@@ -27,30 +31,83 @@ export default function AddTask({
   setIsOpen: (X: boolean) => void;
   variant?: "drawer" | "modal";
 }) {
-  const TaskFormGroups: FormGroup<TaskFormValues>[] = [
+  const ProjectFormGroups: FormGroup<ProjectFormValues>[] = [
     {
       collapsible: false,
       icon: UserPlus,
       fields: [
         {
-          name: "TaskTitle",
-          label: "Task Title",
+          name: "name",
+          label: "Name",
           type: "text",
           required: true,
           grid: { xs: 12 },
         },
         {
-          name: "category",
-          label: "Category",
+          name: "id",
+          label: "Project ID",
+          type: "text",
+          required: true,
+          grid: { xs: 12, sm: 6 },
+        },
+        {
+          name: "project_type",
+          label: "Project Type",
           type: "select",
           required: true,
-          grid: { xs: 12 },
+          grid: { xs: 12, sm: 6 },
           options: [
             { value: "VIP", label: "VIP" },
             { value: "ColabX", label: "Colab X" },
             { value: "ColabY", label: "Colab Y" },
             { value: "ColabZ", label: "Colab Z" },
           ],
+        },
+        {
+          name: "client",
+          label: "Client",
+          type: "multi-select",
+          required: true,
+          grid: { xs: 12, sm: 6 },
+          options: [
+            { value: "VIP", label: "VIP" },
+            { value: "ColabX", label: "Colab X" },
+            { value: "ColabY", label: "Colab Y" },
+            { value: "ColabZ", label: "Colab Z" },
+          ],
+        },
+        {
+          name: "category",
+          label: "Category",
+          type: "select",
+          required: true,
+          grid: { xs: 12, sm: 6 },
+          options: [
+            { value: "VIP", label: "VIP" },
+            { value: "ColabX", label: "Colab X" },
+            { value: "ColabY", label: "Colab Y" },
+            { value: "ColabZ", label: "Colab Z" },
+          ],
+        },
+        {
+          name: "project_timing",
+          label: "Project Timing",
+          type: "select",
+          required: true,
+          grid: { xs: 12, sm: 6 },
+          options: [
+            { value: "VIP", label: "VIP" },
+            { value: "ColabX", label: "Colab X" },
+            { value: "ColabY", label: "Colab Y" },
+            { value: "ColabZ", label: "Colab Z" },
+          ],
+        },
+        {
+          name: "price",
+          label: "Price",
+          type: "text",
+          required: true,
+          grid: { xs: 12, sm: 6 },
         },
         {
           name: "responsible_persons",
@@ -66,7 +123,23 @@ export default function AddTask({
             })),
           ],
           required: true,
-          grid: { xs: 12 },
+          grid: { xs: 12, sm: 6 },
+        },
+        {
+          name: "team_leader",
+          label: "Team Leader",
+          type: "user-multi-select",
+          isMulti: true,
+          isDropDown: true,
+          options: [
+            ...contacts.map((contact) => ({
+              value: contact.id,
+              label: contact.name,
+              image: contact.avatar,
+            })),
+          ],
+          required: true,
+          grid: { xs: 12, sm: 6 },
         },
         {
           name: "startDate",
@@ -80,23 +153,6 @@ export default function AddTask({
           label: "Due Date",
           type: "date",
           required: true,
-          grid: { xs: 12, sm: 6 },
-        },
-        {
-          name: "tags",
-          label: "Tags",
-          type: "multi-select",
-          options: [
-            { value: "VIP", label: "VIP" },
-            { value: "ColabX", label: "Colab X" },
-          ],
-          grid: { xs: 12, sm: 6 },
-        },
-        {
-          name: "Phone",
-          label: "Phone",
-          required: true,
-          type: "phone",
           grid: { xs: 12, sm: 6 },
         },
         {
@@ -132,18 +188,18 @@ export default function AddTask({
     },
   ];
 
-  const handleSubmit = (data: TaskFormValues) => {
+  const handleSubmit = (data: ProjectFormValues) => {
     console.log("Form submitted:", data);
   };
   return (
-    <FormDrawer<TaskFormValues>
+    <FormDrawer<ProjectFormValues>
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       onSubmit={handleSubmit}
-      groups={TaskFormGroups}
+      groups={ProjectFormGroups}
       initialValues={{}}
       variant={variant}
-      title="Add New Task"
+      title="Add New Project"
       submitText="Save"
       cancelText="Cancel"
     />

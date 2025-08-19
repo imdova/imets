@@ -8,6 +8,7 @@ import {
   Shell,
   ShieldUser,
   Sparkles,
+  Target,
   UserSearch,
 } from "lucide-react";
 
@@ -79,6 +80,12 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
           href: "/admin/pipelines",
           pattern: "/admin/pipelines/*",
           icon: MessageSquareWarning,
+        },
+        {
+          title: "Projects",
+          href: "/admin/projects",
+          pattern: "/admin/projects/*",
+          icon: Target,
         },
         {
           title: "Tasks",

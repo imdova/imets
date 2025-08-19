@@ -90,7 +90,7 @@ export default function LeadPage() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isCompanyopen, setIsCompanyopen] = useState<boolean>(false);
   const [isDealOpen, setIsDealOpen] = useState<boolean>(false);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
 
   const columns = [
