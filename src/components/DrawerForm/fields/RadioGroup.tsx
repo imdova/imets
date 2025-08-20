@@ -11,6 +11,7 @@ export const RadioGroup = ({ field, value, onChange }: RadioGroupProps) => {
     <div className="flex flex-wrap items-center gap-2">
       {field.options.map((option) => {
         const isSelected = value === option.value;
+        const Icon = option.icon;
         return (
           <label
             key={option.value}
@@ -23,9 +24,21 @@ export const RadioGroup = ({ field, value, onChange }: RadioGroupProps) => {
               onChange={() => onChange(option.value)}
               className="hidden"
             />
-            <div
-              className={`mr-3 flex h-5 w-5 items-center justify-center rounded-md border transition ${isSelected ? "border-secondary bg-secondary" : "border-gray-400"} `}
-            ></div>
+            {Icon ? (
+              <Icon
+                className={`mr-3 h-4 w-4 ${
+                  isSelected ? "text-secondary" : "text-gray-400"
+                }`}
+              />
+            ) : (
+              <div
+                className={`mr-3 flex h-5 w-5 items-center justify-center rounded-md border transition ${
+                  isSelected
+                    ? "border-secondary bg-secondary"
+                    : "border-gray-400"
+                }`}
+              />
+            )}
             <span className="text-sm text-gray-800">{option.label}</span>
           </label>
         );

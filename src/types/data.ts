@@ -121,3 +121,56 @@ export interface Project {
   createdAt?: string; // Optional for sorting
   updatedAt?: string; // Optional for tracking changes
 }
+
+export type InvoiceStatus = "partially paid" | "unpaid" | "paid" | "overdue";
+export type PaymentStatus = "paid" | "unpaid" | "partial";
+
+export interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  client: Company;
+  project?: Project;
+  issueDate: string;
+  dueDate: string;
+  totalAmount: number;
+  paidAmount: number;
+  balanceAmount: number;
+  status: InvoiceStatus;
+  paymentStatus: PaymentStatus;
+  items: InvoiceItem[];
+}
+
+export interface InvoiceItem {
+  id: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
+}
+
+export interface Activity {
+  id: string;
+  title: string;
+  type: "meeting" | "task" | "email" | "call" | "event";
+  status: "not-started" | "in-progress" | "completed";
+  priority: "high" | "medium" | "low";
+  dueDate: Date;
+  owner: Contact;
+  duration: number;
+  description: string;
+  createdAt: Date;
+  completedAt?: Date;
+}
+
+// Define User type
+export interface User {
+  id: string;
+  name: string;
+  phone: string;
+  role: string;
+  email: string;
+  created: Date;
+  lastActivity: string;
+  status: "active" | "inactive";
+  avatar: string;
+}

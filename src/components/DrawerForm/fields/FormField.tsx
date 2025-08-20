@@ -21,6 +21,7 @@ import Link from "next/link";
 import { Plus, PlusCircle, Trash2 } from "lucide-react";
 import { UserMultiSelect } from "./UserMultiSelect";
 import { ListsField } from "./ListField";
+import { PricingTableField } from "./PricingTableField";
 
 interface FormFieldProps<T extends FieldValues> {
   field: FormField<Path<T>>;
@@ -320,6 +321,8 @@ export const FormFieldRenderer = <T extends FieldValues>({
           )}
         </div>
       ) : field.type === "text" ||
+        field.type === "password" ||
+        field.type === "number" ||
         field.type === "email" ||
         field.type === "textarea" ? (
         <Controller
@@ -431,6 +434,8 @@ export const FormFieldRenderer = <T extends FieldValues>({
             />
           )}
         />
+      ) : field.type === "pricing-table" ? (
+        <PricingTableField field={field} form={form} />
       ) : null}
 
       {error && (

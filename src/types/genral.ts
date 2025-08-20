@@ -1,3 +1,4 @@
+import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
 
 export type DropdownAction = {
@@ -17,6 +18,14 @@ export type FilterOption = {
     count?: number;
     avatar?: string;
   }[];
+};
+
+export type IconFilter = {
+  id: string;
+  icon: LucideIcon;
+  label: string;
+  active: boolean;
+  show: boolean;
 };
 
 export interface SortOption {
@@ -43,4 +52,6 @@ export type FilterBarProps = {
   defaultSort?: string;
   onSortChange?: (sortValue: string) => void;
   showDateRange?: boolean;
+  showIconFilters?: boolean;
+  iconFilters?: IconFilter[];
 };

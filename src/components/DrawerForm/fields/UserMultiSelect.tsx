@@ -95,7 +95,7 @@ export const UserMultiSelect = <T extends string>({
         <button
           type="button"
           onClick={toggleDropdown}
-          className="flex w-full items-center justify-between rounded-lg border border-gray-300 px-3 py-2 text-left text-sm focus:outline-none"
+          className="mt-2 flex w-full items-center justify-between rounded-md border border-gray-300 px-3 py-2.5 text-left text-sm focus:outline-none"
         >
           <div className="flex items-center gap-2 overflow-hidden">
             {selectedOptions.length > 0 ? (
@@ -130,7 +130,7 @@ export const UserMultiSelect = <T extends string>({
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 mt-1 w-full rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+          <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white p-2 shadow-md">
             <div className="relative mb-2">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input
@@ -162,7 +162,7 @@ export const UserMultiSelect = <T extends string>({
                         height={150}
                         src={option.image}
                         alt={option.label}
-                        className="h-8 w-8 rounded-full object-cover"
+                        className="h-6 w-6 rounded-full object-cover"
                       />
                     ) : (
                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-200 text-sm font-medium text-gray-600">
@@ -170,7 +170,7 @@ export const UserMultiSelect = <T extends string>({
                       </div>
                     )}
                     <div className="flex-1 truncate">
-                      <div className="text-sm font-medium">{option.label}</div>
+                      <div className="text-xs font-medium">{option.label}</div>
                     </div>
                     {selectedOptions.some((o) => o.value === option.value) && (
                       <Check className="h-4 w-4 text-main" />
