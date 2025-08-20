@@ -122,8 +122,8 @@ export function FormDrawer<T extends FieldValues>({
                 </button>
               </div>
 
-              <div className="h-full px-2 pb-4 pt-5 sm:p-3 sm:pb-4">
-                <div className="flex items-center justify-between p-2 px-7">
+              <div className="h-full">
+                <div className="flex items-center justify-between p-4 px-7">
                   <h3 className="text-lg font-medium leading-6 text-gray-900">
                     {title}
                   </h3>
@@ -154,12 +154,12 @@ export function FormDrawer<T extends FieldValues>({
                 )}
 
                 <form
-                  className={`relative flex flex-col justify-between`}
+                  className={`flex h-full flex-col justify-between`}
                   onSubmit={form.handleSubmit(handleSubmit)}
                 >
                   <div
                     style={{ minHeight: minHight }}
-                    className={`no-scrollbar relative space-y-4 overflow-y-auto pb-16 ${
+                    className={`no-scrollbar relative flex-1 space-y-4 overflow-y-auto px-2 pb-16 pt-5 sm:p-3 ${
                       variant === "drawer" ? "max-h-[650px]" : "max-h-[600px]"
                     }`}
                   >
@@ -175,7 +175,7 @@ export function FormDrawer<T extends FieldValues>({
                     ))}
                   </div>
 
-                  <div className="absolute bottom-0 left-0 z-10 mt-8 flex w-full justify-between bg-white p-3">
+                  <div className="absolute bottom-0 left-0 z-10 mt-8 flex w-full justify-between border-t border-gray-100 bg-white p-3 shadow-md">
                     <div>
                       {stages.length > 0 && currentStage > 0 && (
                         <button

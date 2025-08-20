@@ -151,11 +151,11 @@ export const PhoneInput = ({ value, onChange, field }: PhoneInputProps) => {
 
   return (
     <div className="relative font-sans text-gray-800">
-      <div className="flex overflow-hidden rounded-lg border border-gray-300 shadow-sm">
+      <div className="flex overflow-hidden rounded-md border border-gray-300 shadow-sm">
         {/* Country Selector Button */}
         <button
           type="button"
-          className="flex items-center rounded-l-lg border-r border-gray-300 bg-gray-50 px-4 py-3 text-sm font-medium transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
+          className="flex items-center rounded-l-md border-r border-gray-300 bg-gray-50 px-4 py-3 text-sm font-medium transition-colors hover:bg-gray-100 focus:outline-none"
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           {selectedCountry ? (

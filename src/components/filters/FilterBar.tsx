@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterBarProps, FilterOption } from "@/types/genral";
+import { FilterBarProps, FilterOption, IconFilter } from "@/types/genral";
 import {
   Search,
   List,
@@ -12,6 +12,11 @@ import {
   Check,
   LayoutGrid,
   ArrowUpDown,
+  Heart,
+  Tag,
+  MapPin,
+  User,
+  Calendar,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -80,6 +85,45 @@ const dummyFilters: FilterOption[] = [
   },
 ];
 
+// Default icon filters
+const defaultIconFilters: IconFilter[] = [
+  {
+    id: "favorites",
+    icon: Heart,
+    label: "Favorites",
+    active: false,
+    show: true,
+  },
+  {
+    id: "tagged",
+    icon: Tag,
+    label: "Tagged",
+    active: false,
+    show: true,
+  },
+  {
+    id: "location",
+    icon: MapPin,
+    label: "Has Location",
+    active: false,
+    show: true,
+  },
+  {
+    id: "assigned",
+    icon: User,
+    label: "Assigned",
+    active: false,
+    show: true,
+  },
+  {
+    id: "scheduled",
+    icon: Calendar,
+    label: "Scheduled",
+    active: false,
+    show: true,
+  },
+];
+
 export const FilterBar = ({
   viewMode = "list",
   onViewModeChange,
@@ -95,6 +139,8 @@ export const FilterBar = ({
   defaultSort = "",
   onSortChange,
   showDateRange = false,
+  iconFilters = defaultIconFilters,
+  showIconFilters = false,
 }: FilterBarProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -105,6 +151,9 @@ export const FilterBar = ({
   const [activeFilters, setActiveFilters] = useState<Record<string, string[]>>(
     {},
   );
+  const [activeIconFilters, setActiveIconFilters] = useState<
+    Record<string, boolean>
+  >({});
   const [filterSearch, setFilterSearch] = useState<Record<string, string>>({});
   const [isFilterOpen, setIsFilterOpen] = useState<string | null>(null);
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -142,10 +191,12 @@ export const FilterBar = ({
     };
   }, []);
 
-  // Initialize active filters and sort from URL
+  // Initialize active filters, icon filters and sort from URL
+  // Initialize active filters, icon filters and sort from URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const filters: Record<string, string[]> = {};
+    const iconFiltersState: Record<string, boolean> = {};
 
     // Get all unique keys from URL
     const uniqueKeys = Array.from(new Set(Array.from(params.keys())));
@@ -159,13 +210,24 @@ export const FilterBar = ({
         key !== "startDate" &&
         key !== "endDate"
       ) {
-        filters[key] = params.getAll(key);
+        // Check if this is an icon filter
+        if (iconFilters.some((filter) => filter.id === key)) {
+          iconFiltersState[key] = params.get(key) === "true";
+        } else {
+          filters[key] = params.getAll(key);
+        }
       }
     });
 
     // Only update state if something actually changed
     if (JSON.stringify(filters) !== JSON.stringify(activeFilters)) {
       setActiveFilters(filters);
+    }
+
+    if (
+      JSON.stringify(iconFiltersState) !== JSON.stringify(activeIconFilters)
+    ) {
+      setActiveIconFilters(iconFiltersState);
     }
 
     const newSort = params.get("sort") || defaultSort;
@@ -189,78 +251,91 @@ export const FilterBar = ({
         endDate: newEndDate,
       });
     }
-  }, [defaultSort]);
-  // Update URL when filters, search or sort change
-  const updateUrl = useCallback(() => {
-    const currentParams = new URLSearchParams(window.location.search);
-    const newParams = new URLSearchParams();
+  }, [defaultSort]); // Removed activeFilters and activeIconFilters from dependencies
 
-    // Add search query if it exists
-    if (searchQuery) {
-      newParams.set("search", searchQuery);
-    } else if (currentParams.has("search")) {
-      newParams.delete("search");
-    }
+  // Update URL when filters, search, or sort change
+  const updateUrl = useCallback(
+    (newIconFilters: Record<string, boolean> = activeIconFilters) => {
+      const currentParams = new URLSearchParams(window.location.search);
+      const newParams = new URLSearchParams();
 
-    // Add sort if it exists
-    if (selectedSort) {
-      newParams.set("sort", selectedSort);
-    } else if (currentParams.has("sort")) {
-      newParams.delete("sort");
-    }
-
-    // Add date range
-    if (dateRange.startDate) {
-      newParams.set("startDate", dateRange.startDate.toISOString());
-    } else if (currentParams.has("startDate")) {
-      newParams.delete("startDate");
-    }
-
-    if (dateRange.endDate) {
-      newParams.set("endDate", dateRange.endDate.toISOString());
-    } else if (currentParams.has("endDate")) {
-      newParams.delete("endDate");
-    }
-
-    // Add other filters
-    Object.entries(activeFilters).forEach(([key, values]) => {
-      values.forEach((value) => {
-        newParams.append(key, value);
-      });
-    });
-
-    // Remove filters that were removed
-    Array.from(currentParams.keys()).forEach((key) => {
-      if (
-        key !== "search" &&
-        key !== "sort" &&
-        key !== "startDate" &&
-        key !== "endDate" &&
-        key !== "view" &&
-        !activeFilters[key]
-      ) {
-        newParams.delete(key);
+      // Add search query if it exists
+      if (searchQuery) {
+        newParams.set("search", searchQuery);
+      } else if (currentParams.has("search")) {
+        newParams.delete("search");
       }
-    });
 
-    // Add view mode
-    if (viewMode) {
-      newParams.set("view", viewMode);
-    }
+      // Add sort if it exists
+      if (selectedSort) {
+        newParams.set("sort", selectedSort);
+      } else if (currentParams.has("sort")) {
+        newParams.delete("sort");
+      }
 
-    // Only update URL if something actually changed
-    if (newParams.toString() !== currentParams.toString()) {
-      router.replace(`${pathname}?${newParams.toString()}`);
-    }
-  }, [
-    searchQuery,
-    selectedSort,
-    dateRange,
-    activeFilters,
-    viewMode,
-    pathname,
-    router,
-  ]);
+      // Add date range
+      if (dateRange.startDate) {
+        newParams.set("startDate", dateRange.startDate.toISOString());
+      } else if (currentParams.has("startDate")) {
+        newParams.delete("startDate");
+      }
+
+      if (dateRange.endDate) {
+        newParams.set("endDate", dateRange.endDate.toISOString());
+      } else if (currentParams.has("endDate")) {
+        newParams.delete("endDate");
+      }
+
+      // Add other filters
+      Object.entries(activeFilters).forEach(([key, values]) => {
+        values.forEach((value) => {
+          newParams.append(key, value);
+        });
+      });
+
+      // Add icon filters using the new state
+      Object.entries(newIconFilters).forEach(([key, value]) => {
+        if (value) {
+          newParams.set(key, value.toString());
+        }
+      });
+
+      // Remove filters that were removed
+      Array.from(currentParams.keys()).forEach((key) => {
+        if (
+          key !== "search" &&
+          key !== "sort" &&
+          key !== "startDate" &&
+          key !== "endDate" &&
+          key !== "view" &&
+          !activeFilters[key] &&
+          !newIconFilters[key]
+        ) {
+          newParams.delete(key);
+        }
+      });
+
+      // Add view mode
+      if (viewMode) {
+        newParams.set("view", viewMode);
+      }
+
+      // Only update URL if something actually changed
+      if (newParams.toString() !== currentParams.toString()) {
+        router.replace(`${pathname}?${newParams.toString()}`);
+      }
+    },
+    [
+      searchQuery,
+      selectedSort,
+      dateRange,
+      activeFilters,
+      activeIconFilters, // Keep this for other state changes
+      viewMode,
+      pathname,
+      router,
+    ],
+  );
 
   // Handle date range change
   const handleDateRangeChange = useCallback(
@@ -322,6 +397,22 @@ export const FilterBar = ({
     });
   };
 
+  // Toggle icon filter
+  const toggleIconFilter = (filterId: string) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const isActive = searchParams.get(filterId) === "true";
+
+    if (isActive) {
+      currentParams.delete(filterId);
+    } else {
+      currentParams.set(filterId, "true");
+    }
+
+    // Use the router to push the new URL. Using push() or replace()
+    // will cause the component to re-render.
+    router.push(`${pathname}?${currentParams.toString()}`);
+  };
+
   // Apply filters
   const applyFilters = () => {
     updateUrl();
@@ -331,8 +422,10 @@ export const FilterBar = ({
   // Reset all filters
   const resetFilters = () => {
     setActiveFilters({});
+    setActiveIconFilters({});
     setSearchQuery("");
     setSelectedSort(defaultSort);
+    setDateRange({ startDate: null, endDate: null });
     const params = new URLSearchParams();
     if (viewMode) {
       params.set("view", viewMode);
@@ -647,6 +740,35 @@ export const FilterBar = ({
         </div>
 
         <div className="flex w-full items-center justify-between gap-2 lg:w-fit lg:justify-start">
+          {/* Icon Filters */}
+          {showIconFilters && (
+            <div className="flex items-center gap-1">
+              {iconFilters
+                .filter((filter) => filter.show !== false)
+                .map((filter) => {
+                  const IconComponent = filter.icon;
+                  // Determine the active state directly from the URL.
+                  // This is the single source of truth.
+                  const isActive = searchParams.get(filter.id) === "true";
+
+                  return (
+                    <button
+                      key={filter.id}
+                      onClick={() => toggleIconFilter(filter.id)}
+                      className={`flex items-center justify-center rounded-lg p-2 ${
+                        isActive
+                          ? "bg-main text-white"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      }`}
+                      title={filter.label}
+                    >
+                      <IconComponent className="h-4 w-4" />
+                    </button>
+                  );
+                })}
+            </div>
+          )}
+
           {showViewToggle && (
             <div className="flex gap-2 rounded-lg bg-gray-100 p-2 px-3 shadow-sm">
               <button
@@ -686,7 +808,9 @@ export const FilterBar = ({
       </div>
 
       {/* Active filters display */}
-      {Object.keys(activeFilters).length > 0 && (
+      {(Object.keys(activeFilters).length > 0 ||
+        Object.values(activeIconFilters).some((value) => value) ||
+        dateRange.startDate) && (
         <div className="flex flex-wrap items-center gap-4">
           {dateRange.startDate && (
             <div className="flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm">
@@ -716,6 +840,34 @@ export const FilterBar = ({
               </button>
             </div>
           )}
+
+          {/* Display active icon filters */}
+          {Object.entries(activeIconFilters)
+            .filter(([isActive]) => isActive)
+            .map(([filterId]) => {
+              const filter = iconFilters.find((f) => f.id === filterId);
+              if (!filter) return null;
+
+              const IconComponent = filter.icon;
+
+              return (
+                <div
+                  key={filterId}
+                  className="flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm"
+                >
+                  <IconComponent className="mr-1 h-3 w-3" />
+                  <span className="mr-1 text-xs">{filter.label}</span>
+                  <button
+                    onClick={() => toggleIconFilter(filterId)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              );
+            })}
+
+          {/* Display regular filters */}
           {Object.entries(activeFilters).map(([filterId, values]) =>
             values.map((value) => {
               const filter = filters.find((f) => f.id === filterId);

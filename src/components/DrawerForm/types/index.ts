@@ -4,6 +4,8 @@ import { DefaultValues, FieldValues, Path } from "react-hook-form";
 export type FieldType =
   | "text"
   | "email"
+  | "password"
+  | "number"
   | "phone"
   | "select"
   | "multi-select"
@@ -18,12 +20,14 @@ export type FieldType =
   | "field-group"
   | "conditional-group"
   | "list"
-  | "user-multi-select";
+  | "user-multi-select"
+  | "pricing-table";
 
 export interface FormFieldOption {
   value: string;
   label: string;
   image?: string;
+  icon?: LucideIcon;
 }
 
 interface BaseFormField<T extends string> {
@@ -48,12 +52,34 @@ interface BaseFormField<T extends string> {
   };
 }
 
+export interface PricingItem {
+  item: string;
+  quantity: number;
+  price: number;
+  discount: number;
+  amount: number;
+  description?: string;
+  sku?: string;
+  unit?: string;
+}
+
 export interface TextFormField<T extends string> extends BaseFormField<T> {
-  type: "text" | "email" | "textarea" | "list";
+  type: "text" | "email" | "textarea" | "list" | "password" | "number";
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
   icon?: LucideIcon;
+}
+
+export interface PricingTableFormField<T extends string>
+  extends BaseFormField<T> {
+  type: "pricing-table";
+  showDiscount?: boolean;
+  showExtraDiscount?: boolean;
+  showTax?: boolean;
+  defaultDiscount?: number;
+  defaultExtraDiscount?: number;
+  defaultTax?: number;
 }
 
 export interface SelectFormField<T extends string> extends BaseFormField<T> {
@@ -62,8 +88,8 @@ export interface SelectFormField<T extends string> extends BaseFormField<T> {
     | "multi-select"
     | "radio"
     | "conditional-group"
+    | "user-multi-select"
     | "user-multi-select";
-
   options: FormFieldOption[];
   isMulti?: boolean;
   isDropDown?: boolean;
@@ -151,7 +177,8 @@ export type FormField<T extends string> =
   | PhoneFormField<T>
   | RichTextFormField<T>
   | ConditionalGroupFormField<T>
-  | GroupFormField<T>;
+  | GroupFormField<T>
+  | PricingTableFormField<T>;
 
 export interface FormGroup<T extends FieldValues> {
   title?: string;

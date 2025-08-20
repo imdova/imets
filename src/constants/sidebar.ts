@@ -1,14 +1,17 @@
 import { SidebarGroup } from "@/types";
 import {
-  Bell,
+  Activity,
   Building2,
+  FileSpreadsheet,
+  Flag,
   LayoutDashboard,
   ListChecks,
   MessageSquareWarning,
   Shell,
-  ShieldUser,
   Sparkles,
   Target,
+  UserCog,
+  Users,
   UserSearch,
 } from "lucide-react";
 
@@ -51,6 +54,11 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
           pattern: "/admin",
           icon: LayoutDashboard,
         },
+      ],
+    },
+    {
+      title: "CRM",
+      items: [
         {
           title: "Contacts",
           href: "/admin/contacts",
@@ -93,22 +101,40 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
           pattern: "/admin/tasks/*",
           icon: ListChecks,
         },
+        {
+          title: "Invoices",
+          href: "/admin/invoices",
+          pattern: "/admin/invoices/*",
+          icon: FileSpreadsheet,
+        },
+        {
+          title: "Activities",
+          href: "/admin/activities",
+          pattern: "/admin/activities/*",
+          icon: Activity,
+        },
       ],
     },
     {
-      title: "Other",
+      title: "User Management",
       items: [
         {
-          title: "Notifications",
-          href: "/admin/notifications",
-          pattern: "/admin/notifications",
-          icon: Bell,
+          title: "Management Users",
+          href: "/admin/management-users",
+          pattern: "/admin/management-users",
+          icon: Users,
         },
         {
-          title: "Security Settings",
-          href: "/admin/security",
-          pattern: "/admin/security",
-          icon: ShieldUser,
+          title: "Roles & Permissions",
+          href: "/admin/roles-permissions",
+          pattern: "/admin/roles-permissions",
+          icon: UserCog,
+        },
+        {
+          title: "Delete Request",
+          href: "/admin/delete-request",
+          pattern: "/admin/delete-request",
+          icon: Flag,
         },
       ],
     },

@@ -32,7 +32,7 @@ const labels = {
   "/contacts": "Contacts",
 };
 
-const projectFilters: FilterOption[] = [
+const contactsFilters: FilterOption[] = [
   {
     id: "status",
     name: "Status",
@@ -262,13 +262,13 @@ export default function ContactPage() {
       </div>
       <Suspense>
         <FilterBar
-          filters={projectFilters}
+          filters={contactsFilters}
           showFilters
           showSearch
           showBtnAdd
           viewMode={viewMode}
           onViewModeChange={setViewMode}
-          placeholder="Search projects..."
+          placeholder="Search contactss..."
           BtnAdd={{ label: "Add Contact", onClick: () => setIsOpen(true) }}
           sortOptions={[
             { value: "name-asc", label: "Name (A-Z)" },
