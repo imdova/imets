@@ -86,7 +86,9 @@ export function FormDrawer<T extends FieldValues>({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[2000] overflow-hidden">
+        <div
+          className={`fixed inset-0 z-[2000] overflow-hidden ${variant === "modal" && "p-2"}`}
+        >
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -159,8 +161,10 @@ export function FormDrawer<T extends FieldValues>({
                 >
                   <div
                     style={{ minHeight: minHight }}
-                    className={`no-scrollbar relative flex-1 space-y-4 overflow-y-auto px-2 pb-16 pt-5 sm:p-3 ${
-                      variant === "drawer" ? "max-h-[650px]" : "max-h-[600px]"
+                    className={`no-scrollbar relative flex-1 space-y-4 overflow-y-auto px-2 pt-5 sm:p-3 ${
+                      variant === "drawer"
+                        ? "max-h-[650px] !pb-16"
+                        : "max-h-[600px] !pb-20"
                     }`}
                   >
                     {visibleGroups.map((group, groupIndex) => (
@@ -175,7 +179,7 @@ export function FormDrawer<T extends FieldValues>({
                     ))}
                   </div>
 
-                  <div className="absolute bottom-0 left-0 z-10 mt-8 flex w-full justify-between border-t border-gray-100 bg-white p-3 shadow-md">
+                  <div className="absolute bottom-0 left-0 z-10 mt-8 flex w-full justify-between rounded-lg border-t border-gray-100 bg-white p-3 shadow-md">
                     <div>
                       {stages.length > 0 && currentStage > 0 && (
                         <button

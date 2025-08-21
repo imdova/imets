@@ -2,17 +2,23 @@ import { SidebarGroup } from "@/types";
 import {
   Activity,
   Building2,
+  Calendar1,
+  ExternalLink,
   FileSpreadsheet,
   Flag,
+  GraduationCap,
   LayoutDashboard,
   ListChecks,
+  Megaphone,
   MessageSquareWarning,
   Shell,
   Sparkles,
+  SquarePen,
   Target,
   UserCog,
   Users,
   UserSearch,
+  XCircle,
 } from "lucide-react";
 
 export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
@@ -121,20 +127,149 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
         {
           title: "Management Users",
           href: "/admin/management-users",
-          pattern: "/admin/management-users",
+          pattern: "/admin/management-users/*",
           icon: Users,
         },
         {
           title: "Roles & Permissions",
           href: "/admin/roles-permissions",
-          pattern: "/admin/roles-permissions",
+          pattern: "/admin/roles-permissions/*",
           icon: UserCog,
         },
         {
           title: "Delete Request",
           href: "/admin/delete-request",
-          pattern: "/admin/delete-request",
+          pattern: "/admin/delete-request/*",
           icon: Flag,
+        },
+      ],
+    },
+    {
+      title: "HRM",
+      items: [
+        {
+          title: "Employees",
+          href: "/admin/employees",
+          pattern: "/admin/employees/*",
+          subItems: [
+            {
+              title: "Employees List",
+              href: "/admin/employees?view=list",
+              pattern: "/admin/employees/*",
+            },
+            {
+              title: "Employees Grid",
+              href: "/admin/employees?view=grid",
+              pattern: "/admin/employees/*",
+            },
+            {
+              title: "Employees Details",
+              href: "/admin/employees/1",
+              pattern: "/admin/employees/*",
+            },
+            {
+              title: "Departments",
+              href: "/admin/departments",
+              pattern: "/admin/departments/*",
+            },
+            {
+              title: "Designations",
+              href: "/admin/designations",
+              pattern: "/admin/designations/*",
+            },
+            {
+              title: "Policies",
+              href: "/admin/policies",
+              pattern: "/admin/policies/*",
+            },
+          ],
+          icon: Users,
+        },
+        {
+          title: "Tickets",
+          href: "/admin/tickets",
+          pattern: "/admin/tickets/*",
+          icon: Users,
+        },
+        {
+          title: "Holidays",
+          href: "/admin/holidays",
+          pattern: "/admin/holidays/*",
+          icon: Calendar1,
+        },
+        {
+          title: "Performance",
+          href: "/admin/performance",
+          pattern: "/admin/performance/*",
+          subItems: [
+            {
+              title: "Performance Indicator",
+              href: "/admin/performance-indicator",
+              pattern: "/admin/performance-indicator/*",
+            },
+            {
+              title: "Performance Review",
+              href: "/admin/performance-review",
+              pattern: "/admin/performance-review/*",
+            },
+            {
+              title: "Performance Appraisal",
+              href: "/admin/performance-appraisal/1",
+              pattern: "/admin/performance-appraisal/*",
+            },
+            {
+              title: "Goal List",
+              href: "/admin/goal-list",
+              pattern: "/admin/goal-list/*",
+            },
+            {
+              title: "Goal Type",
+              href: "/admin/goal-type",
+              pattern: "/admin/goal-type/*",
+            },
+          ],
+          icon: GraduationCap,
+        },
+        {
+          title: "Training",
+          href: "/admin/training",
+          pattern: "/admin/training/*",
+          subItems: [
+            {
+              title: "Training List",
+              href: "/admin/training-list",
+              pattern: "/admin/training-list/*",
+            },
+            {
+              title: "Trainers",
+              href: "/admin/trainers",
+              pattern: "/admin/trainers/*",
+            },
+            {
+              title: "Training Type",
+              href: "/admin/training-type",
+              pattern: "/admin/training-type/*",
+            },
+          ],
+          icon: SquarePen,
+        },
+        {
+          title: "Promotion",
+          href: "/admin/promotion",
+          pattern: "/admin/promotion/*",
+          icon: Megaphone,
+        },
+        {
+          title: "Resignation",
+          href: "/admin/resignation",
+          pattern: "/admin/resignation/*",
+          icon: ExternalLink,
+        },
+        {
+          title: "Termination",
+          href: "/admin/termination",
+          pattern: "/admin/termination/*",
+          icon: XCircle,
         },
       ],
     },

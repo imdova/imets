@@ -174,3 +174,17 @@ export interface User {
   status: "active" | "inactive";
   avatar: string;
 }
+
+export type Ticket = {
+  id: string;
+  ticketId: string;
+  subject: string;
+  description: string;
+  assigned: Contact;
+  assignee: Contact;
+  createdOn: Date;
+  priority: "low" | "medium" | "high" | "urgent";
+  status: "open" | "in-progress" | "resolved" | "closed";
+  category: string;
+  lastUpdated: Date;
+};
