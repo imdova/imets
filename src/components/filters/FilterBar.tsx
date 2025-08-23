@@ -125,6 +125,7 @@ const defaultIconFilters: IconFilter[] = [
 ];
 
 export const FilterBar = ({
+  title,
   viewMode = "list",
   onViewModeChange,
   filters = dummyFilters,
@@ -486,6 +487,7 @@ export const FilterBar = ({
   return (
     <div className="mb-6 flex flex-col gap-3" ref={filterRef}>
       <div className="flex flex-col items-start justify-between gap-2 xl:flex-row xl:items-center">
+        {title && <h2 className="text-lg font-semibold"> {title}</h2>}
         <div className="flex w-full flex-col gap-3 lg:w-fit lg:flex-row">
           {showFilters && (
             <div className="relative w-full lg:w-fit">
@@ -738,73 +740,75 @@ export const FilterBar = ({
             </form>
           )}
         </div>
+        {showIconFilters ||
+          (showViewToggle && (
+            <div className="flex w-full items-center justify-between gap-2 lg:w-fit lg:justify-start">
+              {/* Icon Filters */}
+              {showIconFilters && (
+                <div className="flex items-center gap-1">
+                  {iconFilters
+                    .filter((filter) => filter.show !== false)
+                    .map((filter) => {
+                      const IconComponent = filter.icon;
+                      // Determine the active state directly from the URL.
+                      // This is the single source of truth.
+                      const isActive = searchParams.get(filter.id) === "true";
 
-        <div className="flex w-full items-center justify-between gap-2 lg:w-fit lg:justify-start">
-          {/* Icon Filters */}
-          {showIconFilters && (
-            <div className="flex items-center gap-1">
-              {iconFilters
-                .filter((filter) => filter.show !== false)
-                .map((filter) => {
-                  const IconComponent = filter.icon;
-                  // Determine the active state directly from the URL.
-                  // This is the single source of truth.
-                  const isActive = searchParams.get(filter.id) === "true";
+                      return (
+                        <button
+                          key={filter.id}
+                          onClick={() => toggleIconFilter(filter.id)}
+                          className={`flex items-center justify-center rounded-lg p-2 ${
+                            isActive
+                              ? "bg-main text-white"
+                              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                          }`}
+                          title={filter.label}
+                        >
+                          <IconComponent className="h-4 w-4" />
+                        </button>
+                      );
+                    })}
+                </div>
+              )}
 
-                  return (
-                    <button
-                      key={filter.id}
-                      onClick={() => toggleIconFilter(filter.id)}
-                      className={`flex items-center justify-center rounded-lg p-2 ${
-                        isActive
-                          ? "bg-main text-white"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                      title={filter.label}
-                    >
-                      <IconComponent className="h-4 w-4" />
-                    </button>
-                  );
-                })}
+              {showViewToggle && (
+                <div className="flex gap-2 rounded-lg bg-gray-100 p-2 px-3 shadow-sm">
+                  <button
+                    onClick={toggleViewMode}
+                    className={`rounded-md p-1 ${viewMode === "list" && "bg-secondary text-white"}`}
+                    aria-label={viewMode === "list" ? "Grid view" : "List view"}
+                  >
+                    <List className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={toggleViewMode}
+                    className={`rounded-md p-1 ${viewMode === "grid" && "bg-secondary text-white"}`}
+                    aria-label={viewMode === "grid" ? "Grid view" : "List view"}
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              {showBtnAdd &&
+                (BtnAdd?.url ? (
+                  <Link
+                    className="hover:bg-main/90 flex items-center gap-1 rounded-lg bg-main p-3 text-xs text-white"
+                    href={BtnAdd.url}
+                  >
+                    <PlusCircle size={15} /> {BtnAdd.label}
+                  </Link>
+                ) : (
+                  <button
+                    className="hover:bg-main/90 flex items-center gap-1 rounded-lg bg-main p-3 text-xs text-white"
+                    onClick={BtnAdd?.onClick}
+                  >
+                    <PlusCircle size={15} /> {BtnAdd?.label}
+                  </button>
+                ))}
             </div>
-          )}
-
-          {showViewToggle && (
-            <div className="flex gap-2 rounded-lg bg-gray-100 p-2 px-3 shadow-sm">
-              <button
-                onClick={toggleViewMode}
-                className={`rounded-md p-1 ${viewMode === "list" && "bg-secondary text-white"}`}
-                aria-label={viewMode === "list" ? "Grid view" : "List view"}
-              >
-                <List className="h-4 w-4" />
-              </button>
-              <button
-                onClick={toggleViewMode}
-                className={`rounded-md p-1 ${viewMode === "grid" && "bg-secondary text-white"}`}
-                aria-label={viewMode === "grid" ? "Grid view" : "List view"}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-
-          {showBtnAdd &&
-            (BtnAdd?.url ? (
-              <Link
-                className="hover:bg-main/90 flex items-center gap-1 rounded-lg bg-main p-3 text-xs text-white"
-                href={BtnAdd.url}
-              >
-                <PlusCircle size={15} /> {BtnAdd.label}
-              </Link>
-            ) : (
-              <button
-                className="hover:bg-main/90 flex items-center gap-1 rounded-lg bg-main p-3 text-xs text-white"
-                onClick={BtnAdd?.onClick}
-              >
-                <PlusCircle size={15} /> {BtnAdd?.label}
-              </button>
-            ))}
-        </div>
+          ))}
       </div>
 
       {/* Active filters display */}

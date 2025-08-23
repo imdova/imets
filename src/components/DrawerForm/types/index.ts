@@ -21,7 +21,22 @@ export type FieldType =
   | "conditional-group"
   | "list"
   | "user-multi-select"
+  | "permissions"
   | "pricing-table";
+
+export type Permission =
+  | "Read"
+  | "Write"
+  | "Create"
+  | "Delete"
+  | "Import"
+  | "Export";
+
+export interface ModulePermission {
+  id: string;
+  label: string;
+  permissions: Permission[];
+}
 
 export interface FormFieldOption {
   value: string;
@@ -93,6 +108,11 @@ export interface SelectFormField<T extends string> extends BaseFormField<T> {
   options: FormFieldOption[];
   isMulti?: boolean;
   isDropDown?: boolean;
+}
+export interface PermissionsFormField<T extends string>
+  extends BaseFormField<T> {
+  type: "permissions";
+  permissionCategories?: ModulePermission[];
 }
 
 export interface FileFormField<T extends string> extends BaseFormField<T> {
@@ -178,7 +198,8 @@ export type FormField<T extends string> =
   | RichTextFormField<T>
   | ConditionalGroupFormField<T>
   | GroupFormField<T>
-  | PricingTableFormField<T>;
+  | PricingTableFormField<T>
+  | PermissionsFormField<T>;
 
 export interface FormGroup<T extends FieldValues> {
   title?: string;

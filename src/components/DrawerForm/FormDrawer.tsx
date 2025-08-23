@@ -5,6 +5,24 @@ import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { FormDrawerProps } from "./types";
 import { FormGroupRenderer } from "./FormGroup/FormGroup";
 
+type DrawerWidth =
+  | "sm"
+  | "md"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | "3xl"
+  | "4xl"
+  | "5xl"
+  | "6xl"
+  | "7xl";
+
+export type FormDrawerExtraProps = {
+  variant?: "drawer" | "modal";
+  stages?: string[];
+  width?: DrawerWidth; // 👈 NEW
+};
+
 export function FormDrawer<T extends FieldValues>({
   isOpen,
   onClose,
@@ -18,7 +36,8 @@ export function FormDrawer<T extends FieldValues>({
   variant = "drawer",
   minHight = 300,
   stages = [], // New prop for stages
-}: FormDrawerProps<T> & { variant?: "drawer" | "modal"; stages?: string[] }) {
+  width = "2xl", // 👈 default width
+}: FormDrawerProps<T> & FormDrawerExtraProps) {
   const form = useForm<T>({
     defaultValues: initialValues as DefaultValues<T>,
   });
@@ -109,8 +128,8 @@ export function FormDrawer<T extends FieldValues>({
               variants={currentVariants}
               className={`relative bg-white shadow-xl transition-all ${
                 variant === "drawer"
-                  ? "w-full max-w-2xl"
-                  : "w-full max-w-lg rounded-lg"
+                  ? `w-full max-w-${width}`
+                  : `w-full max-w-${width} rounded-lg`
               }`}
             >
               <div className="absolute right-0 top-0 z-10 pr-4 pt-4">

@@ -22,6 +22,7 @@ import { Plus, PlusCircle, Trash2 } from "lucide-react";
 import { UserMultiSelect } from "./UserMultiSelect";
 import { ListsField } from "./ListField";
 import { PricingTableField } from "./PricingTableField";
+import PermissionsField from "./PermissionsField";
 
 interface FormFieldProps<T extends FieldValues> {
   field: FormField<Path<T>>;
@@ -436,6 +437,23 @@ export const FormFieldRenderer = <T extends FieldValues>({
         />
       ) : field.type === "pricing-table" ? (
         <PricingTableField field={field} form={form} />
+      ) : field.type === "permissions" ? (
+        <Controller
+          name={field.name as Path<T>}
+          control={form.control}
+          rules={validationRules}
+          render={({ field: controllerField }) => (
+            <PermissionsField<T>
+              permissionCategories={field.permissionCategories}
+              field={{
+                ...field,
+                name: field.name as Path<T>,
+              }}
+              form={form}
+              {...controllerField}
+            />
+          )}
+        />
       ) : null}
 
       {error && (

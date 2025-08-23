@@ -155,17 +155,17 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
             {
               title: "Employees List",
               href: "/admin/employees?view=list",
-              pattern: "/admin/employees/*",
+              pattern: "/admin/employees?view=list",
             },
             {
               title: "Employees Grid",
               href: "/admin/employees?view=grid",
-              pattern: "/admin/employees/*",
+              pattern: "/admin/employees?view=grid",
             },
             {
               title: "Employees Details",
               href: "/admin/employees/1",
-              pattern: "/admin/employees/*",
+              pattern: "/admin/employees/1",
             },
             {
               title: "Departments",

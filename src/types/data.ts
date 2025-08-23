@@ -188,3 +188,21 @@ export type Ticket = {
   category: string;
   lastUpdated: Date;
 };
+
+// Define Employee type
+export interface Employee {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  designation: string;
+  joiningDate: string;
+  status: "active" | "inactive";
+  avatar: string;
+  department: string;
+  location: {
+    country: string;
+    countryCode: string;
+  };
+  rating: number;
+}
