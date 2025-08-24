@@ -21,7 +21,23 @@ export type FieldType =
   | "conditional-group"
   | "list"
   | "user-multi-select"
+  | "permissions"
+  | "checked-label"
   | "pricing-table";
+
+export type Permission =
+  | "Read"
+  | "Write"
+  | "Create"
+  | "Delete"
+  | "Import"
+  | "Export";
+
+export interface ModulePermission {
+  id: string;
+  label: string;
+  permissions: Permission[];
+}
 
 export interface FormFieldOption {
   value: string;
@@ -32,7 +48,7 @@ export interface FormFieldOption {
 
 interface BaseFormField<T extends string> {
   name: T;
-  label: string;
+  label?: string;
   type: FieldType;
   required?: boolean;
   placeholder?: string;
@@ -94,6 +110,11 @@ export interface SelectFormField<T extends string> extends BaseFormField<T> {
   isMulti?: boolean;
   isDropDown?: boolean;
 }
+export interface PermissionsFormField<T extends string>
+  extends BaseFormField<T> {
+  type: "permissions";
+  permissionCategories?: ModulePermission[];
+}
 
 export interface FileFormField<T extends string> extends BaseFormField<T> {
   type: "file";
@@ -120,6 +141,11 @@ export interface PhoneFormField<T extends string> extends BaseFormField<T> {
 
 export interface RichTextFormField<T extends string> extends BaseFormField<T> {
   type: "text-editor";
+}
+export interface CheckedLabelFormField<T extends string>
+  extends BaseFormField<T> {
+  type: "checked-label";
+  desc: string;
 }
 
 interface ConditionalFieldGroup {
@@ -178,7 +204,9 @@ export type FormField<T extends string> =
   | RichTextFormField<T>
   | ConditionalGroupFormField<T>
   | GroupFormField<T>
-  | PricingTableFormField<T>;
+  | PricingTableFormField<T>
+  | PermissionsFormField<T>
+  | CheckedLabelFormField<T>;
 
 export interface FormGroup<T extends FieldValues> {
   title?: string;

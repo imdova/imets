@@ -312,7 +312,7 @@ const DateRangeSelector = ({
 
       {/* Dropdown content */}
       {showDropdown && (
-        <div className="absolute left-0 z-10 mt-2 w-full min-w-[300px] rounded-lg border border-gray-200 bg-white shadow-lg sm:w-[28rem]">
+        <div className="absolute left-0 z-10 mt-2 w-full min-w-[200px] rounded-lg border border-gray-200 bg-white shadow-lg sm:w-[350px]">
           <div className="p-4">
             {/* Navigation controls */}
             <div className="mb-4 flex items-center justify-between">

@@ -394,7 +394,9 @@ const DynamicTable = <T extends object>({
   };
 
   return (
-    <div className={`flex flex-col rounded-md ${className}`}>
+    <div
+      className={`flex flex-col rounded-md border border-gray-200 bg-white p-2 shadow-sm ${className}`}
+    >
       <div className="grid grid-cols-1 overflow-x-auto">
         <table style={{ minWidth: minWidth }}>
           <thead className={`bg-gray-100 ${headerClassName}`}>

@@ -244,34 +244,46 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                                       variants={containerVariants}
                                     >
                                       {item.subItems?.map(
-                                        (subItem, subIndex) => (
-                                          <motion.li
-                                            className="cursor-pointer"
-                                            key={subIndex}
-                                            variants={subItemVariants}
-                                          >
-                                            <Link
-                                              href={subItem.href}
-                                              legacyBehavior
+                                        (subItem, subIndex) => {
+                                          const IconSubItem = subItem.icon;
+
+                                          // Get current path WITH query parameters
+                                          const currentPath =
+                                            pathname + window.location.search;
+
+                                          const isActive = isCurrentPage(
+                                            currentPath,
+                                            subItem.pattern,
+                                          );
+
+                                          return (
+                                            <motion.li
+                                              className="cursor-pointer"
+                                              key={subIndex}
+                                              variants={subItemVariants}
                                             >
-                                              <motion.a
-                                                className={`flex items-center gap-2 rounded px-3 py-2 text-sm ${
-                                                  isCurrentPage(
-                                                    pathname,
-                                                    subItem.pattern,
-                                                  )
-                                                    ? "font-medium text-main"
-                                                    : "text-gray-600 hover:text-gray-800"
-                                                }`}
-                                                whileHover={{ x: 3 }}
-                                                whileTap={{ scale: 0.98 }}
+                                              <Link
+                                                href={subItem.href}
+                                                legacyBehavior
                                               >
-                                                {Icon && <Icon size={15} />}
-                                                {subItem.title}
-                                              </motion.a>
-                                            </Link>
-                                          </motion.li>
-                                        ),
+                                                <motion.a
+                                                  className={`flex items-center gap-2 rounded px-3 py-2 text-sm ${
+                                                    isActive
+                                                      ? "font-medium text-main"
+                                                      : "text-gray-600 hover:text-gray-800"
+                                                  }`}
+                                                  whileHover={{ x: 3 }}
+                                                  whileTap={{ scale: 0.98 }}
+                                                >
+                                                  {IconSubItem && (
+                                                    <IconSubItem size={15} />
+                                                  )}
+                                                  {subItem.title}
+                                                </motion.a>
+                                              </Link>
+                                            </motion.li>
+                                          );
+                                        },
                                       )}
                                     </motion.ul>
                                   )}

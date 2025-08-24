@@ -174,3 +174,35 @@ export interface User {
   status: "active" | "inactive";
   avatar: string;
 }
+
+export type Ticket = {
+  id: string;
+  ticketId: string;
+  subject: string;
+  description: string;
+  assigned: Contact;
+  assignee: Contact;
+  createdOn: Date;
+  priority: "low" | "medium" | "high" | "urgent";
+  status: "open" | "in-progress" | "resolved" | "closed";
+  category: string;
+  lastUpdated: Date;
+};
+
+// Define Employee type
+export interface Employee {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  designation: string;
+  joiningDate: string;
+  status: "active" | "inactive";
+  avatar: string;
+  department: string;
+  location: {
+    country: string;
+    countryCode: string;
+  };
+  rating: number;
+}

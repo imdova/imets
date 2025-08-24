@@ -34,6 +34,7 @@ export interface SortOption {
 }
 
 export type FilterBarProps = {
+  title?: string;
   viewMode?: "grid" | "list";
   onViewModeChange?: (mode: "grid" | "list") => void;
   filters?: FilterOption[];
