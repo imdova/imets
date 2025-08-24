@@ -22,6 +22,7 @@ export type FieldType =
   | "list"
   | "user-multi-select"
   | "permissions"
+  | "checked-label"
   | "pricing-table";
 
 export type Permission =
@@ -47,7 +48,7 @@ export interface FormFieldOption {
 
 interface BaseFormField<T extends string> {
   name: T;
-  label: string;
+  label?: string;
   type: FieldType;
   required?: boolean;
   placeholder?: string;
@@ -141,6 +142,11 @@ export interface PhoneFormField<T extends string> extends BaseFormField<T> {
 export interface RichTextFormField<T extends string> extends BaseFormField<T> {
   type: "text-editor";
 }
+export interface CheckedLabelFormField<T extends string>
+  extends BaseFormField<T> {
+  type: "checked-label";
+  desc: string;
+}
 
 interface ConditionalFieldGroup {
   name: string;
@@ -199,7 +205,8 @@ export type FormField<T extends string> =
   | ConditionalGroupFormField<T>
   | GroupFormField<T>
   | PricingTableFormField<T>
-  | PermissionsFormField<T>;
+  | PermissionsFormField<T>
+  | CheckedLabelFormField<T>;
 
 export interface FormGroup<T extends FieldValues> {
   title?: string;

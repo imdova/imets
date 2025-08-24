@@ -24,7 +24,7 @@ import StatsCard from "@/components/UI/cards/StatsCard";
 import ViewToggle from "@/components/UI/Buttons/ViewToggle";
 import { useSearchParams } from "next/navigation";
 import EmployeeCard from "@/components/UI/cards/EmployeeCard";
-import AddEmployee from "@/components/forms/AddEmployee";
+import AddEmployee from "@/components/forms/employees/AddEmployee";
 import { Employee } from "@/types/data";
 import { employees } from "@/constants/employees";
 

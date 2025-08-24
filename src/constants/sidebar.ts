@@ -164,8 +164,8 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
             },
             {
               title: "Employees Details",
-              href: "/admin/employees/1",
-              pattern: "/admin/employees/1",
+              href: "/admin/employees/emp-001",
+              pattern: "/admin/employees/emp-001",
             },
             {
               title: "Departments",

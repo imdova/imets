@@ -246,6 +246,16 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                                       {item.subItems?.map(
                                         (subItem, subIndex) => {
                                           const IconSubItem = subItem.icon;
+
+                                          // Get current path WITH query parameters
+                                          const currentPath =
+                                            pathname + window.location.search;
+
+                                          const isActive = isCurrentPage(
+                                            currentPath,
+                                            subItem.pattern,
+                                          );
+
                                           return (
                                             <motion.li
                                               className="cursor-pointer"
@@ -258,10 +268,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                                               >
                                                 <motion.a
                                                   className={`flex items-center gap-2 rounded px-3 py-2 text-sm ${
-                                                    isCurrentPage(
-                                                      pathname,
-                                                      subItem.pattern,
-                                                    )
+                                                    isActive
                                                       ? "font-medium text-main"
                                                       : "text-gray-600 hover:text-gray-800"
                                                   }`}

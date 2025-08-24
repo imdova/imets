@@ -1,4 +1,3 @@
-"use client";
 import { FormDrawer } from "@/components/DrawerForm/FormDrawer";
 import {
   FormGroup,
@@ -21,7 +20,7 @@ export type EmployeeFormValues = {
   phone: string;
   designation: string;
   about: string;
-  permissions: Record<string, Permission[]>; // 👈 store selected module permissions
+  permissions: Record<string, Permission[]>; // store selected module permissions
 };
 
 const PERMISSION_CATEGORIES: ModulePermission[] = [
@@ -77,7 +76,7 @@ export default function AddEmployee({
   title?: string;
   isOpen: boolean;
   setIsOpen: (X: boolean) => void;
-  initialValues?: EmployeeFormValues;
+  initialValues?: Partial<EmployeeFormValues>; // safer (not all fields required on init)
   variant?: "drawer" | "modal";
 }) {
   const EmployeeFormGroups: FormGroup<EmployeeFormValues>[] = [
@@ -176,7 +175,7 @@ export default function AddEmployee({
       fields: [
         {
           name: "permissions",
-          label: "permissions",
+          label: "Permissions",
           type: "permissions",
           permissionCategories: PERMISSION_CATEGORIES,
           grid: { xs: 12 },
@@ -188,6 +187,7 @@ export default function AddEmployee({
   const handleSubmit = (data: EmployeeFormValues) => {
     console.log("Form submitted:", data);
   };
+
   return (
     <FormDrawer<EmployeeFormValues>
       isOpen={isOpen}

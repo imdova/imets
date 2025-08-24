@@ -23,6 +23,7 @@ import { UserMultiSelect } from "./UserMultiSelect";
 import { ListsField } from "./ListField";
 import { PricingTableField } from "./PricingTableField";
 import PermissionsField from "./PermissionsField";
+import { CheckedLabelField } from "./CheckedLabelField";
 
 interface FormFieldProps<T extends FieldValues> {
   field: FormField<Path<T>>;
@@ -448,9 +449,25 @@ export const FormFieldRenderer = <T extends FieldValues>({
               field={{
                 ...field,
                 name: field.name as Path<T>,
+                label: field.label ?? "",
               }}
               form={form}
               {...controllerField}
+            />
+          )}
+        />
+      ) : field.type === "checked-label" ? (
+        <Controller
+          name={field.name as Path<T>}
+          control={form.control}
+          rules={validationRules}
+          render={({ field: controllerField }) => (
+            <CheckedLabelField<T>
+              field={field}
+              form={form}
+              desc={field.desc}
+              value={controllerField.value}
+              onChange={controllerField.onChange}
             />
           )}
         />

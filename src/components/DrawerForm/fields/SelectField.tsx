@@ -61,7 +61,7 @@ export const SelectField = ({ field, value, onChange }: SelectFieldProps) => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg"
+          className="absolute z-20 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg"
         >
           <div className="max-h-60 overflow-auto py-1">
             {field.options.map((option) => (
