@@ -13,21 +13,32 @@ import { twMerge } from "tailwind-merge";
 export const isCurrentPage = (pathname: string, pattern: string): boolean => {
   if (!pathname || !pattern) return false;
 
-  // Decode both pathname and pattern for proper comparison
+  // Decode both
   const decodedPathname = decodeURIComponent(pathname).replace(/\/+$/, "");
   const decodedPattern = decodeURIComponent(pattern).replace(/\/+$/, "");
 
-  // Handle exact matches first (after decoding)
-  if (decodedPathname === decodedPattern) return true;
+  const hasQueryInPattern = decodedPattern.includes("?");
 
-  // Special case: if pattern ends with /*, match all subroutes
-  if (decodedPattern.endsWith("/*")) {
-    const basePattern = decodedPattern.slice(0, -2);
-    if (decodedPathname === basePattern) return true;
-    return decodedPathname.startsWith(basePattern + "/");
+  if (hasQueryInPattern) {
+    // ✅ If pattern contains a query, require full exact match
+    return decodedPathname === decodedPattern;
   }
 
-  // For all other cases, require exact match
+  // Otherwise, strip query/hash from pathname and match only path
+  const cleanPathname = decodedPathname.split("?")[0].split("#")[0];
+
+  // Exact match without query
+  if (cleanPathname === decodedPattern) return true;
+
+  // Wildcard support
+  if (decodedPattern.endsWith("/*")) {
+    const basePattern = decodedPattern.slice(0, -2);
+    return (
+      cleanPathname === basePattern ||
+      cleanPathname.startsWith(basePattern + "/")
+    );
+  }
+
   return false;
 };
 

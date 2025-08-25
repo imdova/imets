@@ -55,4 +55,8 @@ export type FilterBarProps = {
   showDateRange?: boolean;
   showIconFilters?: boolean;
   iconFilters?: IconFilter[];
+  pointView?: {
+    label: string;
+    value: string;
+  }[];
 };

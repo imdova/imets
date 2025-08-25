@@ -4,6 +4,7 @@ import {
   Building2,
   Calendar1,
   ExternalLink,
+  FileClock,
   FileSpreadsheet,
   Flag,
   GraduationCap,
@@ -196,6 +197,61 @@ export const sidebarGroups: { [key: string]: SidebarGroup[] } = {
           href: "/admin/holidays",
           pattern: "/admin/holidays/*",
           icon: Calendar1,
+        },
+        {
+          title: "Attendance",
+          href: "/admin/attendance",
+          pattern: "/admin/attendance/*",
+          subItems: [
+            {
+              title: "Leaves",
+              href: "/admin/leaves",
+              pattern: "/admin/leaves/*",
+              subItems: [
+                {
+                  title: "Leaves (Admin)",
+                  href: "/admin/leaves-admin",
+                  pattern: "/admin/leaves-admin/*",
+                },
+                {
+                  title: "Leave (Employee)",
+                  href: "/admin/leaves-employee",
+                  pattern: "/admin/leaves-employee/*",
+                },
+                {
+                  title: "Leave Settings",
+                  href: "/admin/leave-settings",
+                  pattern: "/admin/leave-settings/*",
+                },
+              ],
+            },
+            {
+              title: "Attendance (Admin)",
+              href: "/admin/attendance-admin",
+              pattern: "/admin/attendance-admin/*",
+            },
+            {
+              title: "Attendance (Employee)",
+              href: "/admin/attendance-employee",
+              pattern: "/admin/attendance-employee/*",
+            },
+            {
+              title: "Timesheets",
+              href: "/admin/timesheets",
+              pattern: "/admin/timesheets/*",
+            },
+            {
+              title: "Shift & Schedule",
+              href: "/admin/shift-schedule",
+              pattern: "/admin/shift-schedule/*",
+            },
+            {
+              title: "Overtime",
+              href: "/admin/overtime",
+              pattern: "/admin/overtime/*",
+            },
+          ],
+          icon: FileClock,
         },
         {
           title: "Performance",

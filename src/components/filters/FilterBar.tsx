@@ -142,6 +142,7 @@ export const FilterBar = ({
   showDateRange = false,
   iconFilters = defaultIconFilters,
   showIconFilters = false,
+  pointView,
 }: FilterBarProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -487,7 +488,23 @@ export const FilterBar = ({
   return (
     <div className="mb-6 flex flex-col gap-3" ref={filterRef}>
       <div className="flex flex-col items-start justify-between gap-2 xl:flex-row xl:items-center">
-        {title && <h2 className="text-lg font-semibold"> {title}</h2>}
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          {title && <h2 className="text-lg font-semibold">{title}</h2>}
+          {pointView && (
+            <div className="flex flex-wrap items-center gap-2">
+              {pointView.map((point, index) => {
+                return (
+                  <span
+                    className="rounded-md bg-main-transparent px-2 py-1 text-[10px] text-main"
+                    key={index}
+                  >
+                    {point.label}: {point.value}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </div>
         <div className="flex w-full flex-col gap-3 lg:w-fit lg:flex-row">
           {showFilters && (
             <div className="relative w-full lg:w-fit">

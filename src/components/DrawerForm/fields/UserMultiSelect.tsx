@@ -130,7 +130,7 @@ export const UserMultiSelect = <T extends string>({
         </button>
 
         {isOpen && (
-          <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white p-2 shadow-md">
+          <div className="absolute z-30 mt-1 w-full rounded-md border border-gray-200 bg-white p-2 shadow-md">
             <div className="relative mb-2">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <input

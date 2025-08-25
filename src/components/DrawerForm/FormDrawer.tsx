@@ -106,7 +106,7 @@ export function FormDrawer<T extends FieldValues>({
     <AnimatePresence>
       {isOpen && (
         <div
-          className={`fixed inset-0 z-[2000] overflow-hidden ${variant === "modal" && "p-2"}`}
+          className={`fixed inset-0 z-[3000] overflow-hidden ${variant === "modal" && "p-2"}`}
         >
           {/* Backdrop */}
           <motion.div

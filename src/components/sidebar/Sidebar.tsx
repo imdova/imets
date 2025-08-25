@@ -14,6 +14,7 @@ import { User } from "next-auth";
 import { motion, AnimatePresence } from "framer-motion";
 import Avatar from "../UI/Avatar";
 import { isCurrentPage } from "@/util";
+import { SidebarItem } from "@/types";
 
 interface AccountPageProps {
   user: User;
@@ -53,25 +54,45 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
     }
   };
 
+  // Recursive function to check if any subitem is current
+  const isAnySubItemCurrent = (
+    items: SidebarItem[],
+    currentPath: string,
+  ): boolean => {
+    return items.some((item) => {
+      if (isCurrentPage(currentPath, item.pattern || item.href)) return true;
+      if (item.subItems) return isAnySubItemCurrent(item.subItems, currentPath);
+      return false;
+    });
+  };
+
+  // Recursive function to initialize open items
+  const initializeOpenItems = (
+    items: SidebarItem[],
+    currentPath: string,
+    result: Record<string, boolean>,
+  ) => {
+    items.forEach((item) => {
+      if (item.subItems) {
+        const shouldOpen = isAnySubItemCurrent(item.subItems, currentPath);
+        if (shouldOpen) {
+          result[item.href] = true;
+        }
+        initializeOpenItems(item.subItems, currentPath, result);
+      }
+    });
+  };
+
   // Initialize open items based on current path
   useEffect(() => {
     const newOpenItems: Record<string, boolean> = {};
 
     groups?.forEach((group) => {
-      group.items.forEach((item) => {
-        if (item.subItems) {
-          const shouldOpen = item.subItems.some((subItem) =>
-            isCurrentPage(pathname, subItem.href),
-          );
-          if (shouldOpen) {
-            newOpenItems[item.href] = true;
-          }
-        }
-      });
+      initializeOpenItems(group.items, pathname, newOpenItems);
     });
 
     setOpenItems((prev) => ({ ...prev, ...newOpenItems }));
-  }, []);
+  }, [pathname, groups]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -93,6 +114,132 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
     show: { opacity: 1, x: 0 },
   };
 
+  // Recursive component to render nested subitems
+  const renderSubItems = (
+    items: SidebarItem[],
+    level = 1,
+    isMobileView = false,
+  ) => {
+    return items.map((subItem, subIndex) => {
+      const IconSubItem = subItem.icon;
+      const hasNestedSubItems = (subItem.subItems?.length ?? 0) > 0;
+      const isOpen = openItems[subItem.href];
+      const currentPath = pathname + window.location.search;
+      const isActive = isCurrentPage(
+        currentPath,
+        subItem.pattern || subItem.href,
+      );
+      const isAnyNestedCurrent = hasNestedSubItems
+        ? isAnySubItemCurrent(subItem.subItems!, pathname)
+        : false;
+
+      if (isMobileView) {
+        return (
+          <motion.li key={subIndex}>
+            {hasNestedSubItems ? (
+              <>
+                <button
+                  onClick={() => toggleItem(subItem.href)}
+                  className={`flex w-full items-center justify-between px-4 py-2 text-sm ${
+                    isOpen || isAnyNestedCurrent
+                      ? "bg-main-transparent font-medium text-main"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    {IconSubItem && <IconSubItem size={15} />}
+                    {subItem.title}
+                  </div>
+                  <ChevronDown
+                    size={15}
+                    className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {isOpen && (
+                  <ul className="pl-6">
+                    {renderSubItems(subItem.subItems ?? [], level + 1)}
+                  </ul>
+                )}
+              </>
+            ) : (
+              <Link href={subItem.href} legacyBehavior>
+                <a
+                  className={`flex items-center gap-2 px-4 py-2 text-sm ${
+                    isActive
+                      ? "bg-main-transparent font-medium text-main"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                  onClick={() => setActiveDropdown(null)}
+                >
+                  {IconSubItem && <IconSubItem size={15} />}
+                  {subItem.title}
+                </a>
+              </Link>
+            )}
+          </motion.li>
+        );
+      }
+
+      return (
+        <motion.li
+          className="cursor-pointer"
+          key={subIndex}
+          variants={subItemVariants}
+        >
+          {hasNestedSubItems ? (
+            <>
+              <button
+                onClick={() => toggleItem(subItem.href)}
+                className={`flex w-full items-center justify-between rounded px-3 py-2 text-sm ${
+                  isOpen || isAnyNestedCurrent
+                    ? "font-medium text-main"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  {IconSubItem && <IconSubItem size={15} />}
+                  {subItem.title}
+                </div>
+                <ChevronDown
+                  size={15}
+                  className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.ul
+                    className="ml-4 mt-1 space-y-1 border-l border-gray-200 pl-3"
+                    initial="hidden"
+                    animate="show"
+                    exit="hidden"
+                    variants={containerVariants}
+                  >
+                    {renderSubItems(subItem.subItems ?? [], level + 1)}
+                  </motion.ul>
+                )}
+              </AnimatePresence>
+            </>
+          ) : (
+            <Link href={subItem.href} legacyBehavior>
+              <motion.a
+                className={`flex items-center gap-2 rounded px-3 py-2 text-sm ${
+                  isActive
+                    ? "font-medium text-main"
+                    : "text-gray-600 hover:text-gray-800"
+                }`}
+                whileHover={{ x: 3 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {IconSubItem && <IconSubItem size={15} />}
+                {subItem.title}
+              </motion.a>
+            </Link>
+          )}
+        </motion.li>
+      );
+    });
+  };
+
   return (
     <>
       {/* Mobile dropdown overlay */}
@@ -109,7 +256,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
       </AnimatePresence>
 
       <aside
-        className={`no-scrollbar bottom-0 left-0 top-0 ${expanded ? "z-[1000]" : "z-20"} h-fit min-h-screen border-r border-gray-200 bg-white shadow-md md:sticky md:top-6 md:overflow-y-auto md:shadow-none ${expanded ? "fixed overflow-y-auto" : "sticky"}`}
+        className={`no-scrollbar bottom-0 left-0 top-0 ${expanded ? "z-[1000]" : "z-20"} min-h-screen border-r border-gray-200 bg-white shadow-md md:sticky md:top-6 md:overflow-y-auto md:shadow-none ${expanded ? "fixed h-full overflow-y-auto md:h-screen" : "sticky"}`}
       >
         <motion.div
           className={`h-full p-1 ${expanded ? "w-64" : "w-14 md:w-64"}`}
@@ -170,16 +317,15 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                     </p>
                   )}
                   <ul className="space-y-1">
-                    {group.items.map((item) => {
+                    {group.items.map((item: SidebarItem) => {
                       const Icon = item.icon;
-                      const hasSubItems = item?.subItems?.length ?? 0 > 0;
+                      const hasSubItems = (item.subItems ?? []).length > 0;
                       const isOpen = openItems[item.href];
                       const isCurrent = isCurrentPage(pathname, item?.pattern);
-                      const isAnySubItemCurrent =
-                        hasSubItems &&
-                        item.subItems?.some((subItem) =>
-                          isCurrentPage(pathname, subItem.pattern),
-                        );
+                      const isAnySubItemCurrentt =
+                        hasSubItems && item.subItems
+                          ? isAnySubItemCurrent(item.subItems, pathname)
+                          : false;
                       const isActiveDropdown = activeDropdown === item.href;
 
                       return (
@@ -194,7 +340,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                               <motion.button
                                 onClick={() => toggleItem(item.href)}
                                 className={`relative flex w-full items-center justify-between gap-2 rounded-md ${!expanded ? "!justify-center py-2" : "px-3 py-2"} text-sm ${
-                                  isOpen || isAnySubItemCurrent
+                                  isOpen || isAnySubItemCurrentt
                                     ? `${expanded ? "bg-main-transparent text-main" : "bg-main text-white"} font-medium`
                                     : "text-gray-700 hover:bg-gray-100"
                                 }`}
@@ -203,7 +349,7 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                               >
                                 <div className="flex items-center gap-2">
                                   <div
-                                    className={`rounded-md p-1 ${(isOpen || (isAnySubItemCurrent && expanded)) && "bg-main text-white"} `}
+                                    className={`rounded-md p-1 ${(isOpen || (isAnySubItemCurrentt && expanded)) && "bg-main text-white"} `}
                                   >
                                     {Icon && (
                                       <Icon size={14} className="w-full" />
@@ -243,53 +389,12 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                                       exit="hidden"
                                       variants={containerVariants}
                                     >
-                                      {item.subItems?.map(
-                                        (subItem, subIndex) => {
-                                          const IconSubItem = subItem.icon;
-
-                                          // Get current path WITH query parameters
-                                          const currentPath =
-                                            pathname + window.location.search;
-
-                                          const isActive = isCurrentPage(
-                                            currentPath,
-                                            subItem.pattern,
-                                          );
-
-                                          return (
-                                            <motion.li
-                                              className="cursor-pointer"
-                                              key={subIndex}
-                                              variants={subItemVariants}
-                                            >
-                                              <Link
-                                                href={subItem.href}
-                                                legacyBehavior
-                                              >
-                                                <motion.a
-                                                  className={`flex items-center gap-2 rounded px-3 py-2 text-sm ${
-                                                    isActive
-                                                      ? "font-medium text-main"
-                                                      : "text-gray-600 hover:text-gray-800"
-                                                  }`}
-                                                  whileHover={{ x: 3 }}
-                                                  whileTap={{ scale: 0.98 }}
-                                                >
-                                                  {IconSubItem && (
-                                                    <IconSubItem size={15} />
-                                                  )}
-                                                  {subItem.title}
-                                                </motion.a>
-                                              </Link>
-                                            </motion.li>
-                                          );
-                                        },
-                                      )}
+                                      {item.subItems &&
+                                        renderSubItems(item.subItems)}
                                     </motion.ul>
                                   )}
                                 </AnimatePresence>
                               )}
-                              {/* 1## */}
                               {/* Mobile dropdown subitems */}
                               <AnimatePresence>
                                 {isMobile && !expanded && isActiveDropdown && (
@@ -300,40 +405,8 @@ const Sidebar: React.FC<AccountPageProps> = ({ user }) => {
                                     exit={{ opacity: 0, y: -10 }}
                                   >
                                     <ul className="py-1">
-                                      {item.subItems?.map(
-                                        (subItem, subIndex) => (
-                                          <motion.li key={subIndex}>
-                                            <Link
-                                              href={subItem.href}
-                                              legacyBehavior
-                                            >
-                                              <motion.a
-                                                className={`flex cursor-pointer items-center gap-2 px-4 py-2 text-sm ${
-                                                  isCurrentPage(
-                                                    pathname,
-                                                    subItem.pattern,
-                                                  )
-                                                    ? `bg-main-transparent font-medium text-main`
-                                                    : "text-gray-700 hover:bg-gray-100"
-                                                }`}
-                                                whileHover={{ x: 3 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={() =>
-                                                  setActiveDropdown(null)
-                                                }
-                                              >
-                                                <div
-                                                  className={`rounded-md p-1 ${isCurrent && "bg-main text-white"} `}
-                                                >
-                                                  {Icon && <Icon size={14} />}
-                                                </div>
-
-                                                {subItem.title}
-                                              </motion.a>
-                                            </Link>
-                                          </motion.li>
-                                        ),
-                                      )}
+                                      {item.subItems &&
+                                        renderSubItems(item.subItems, 1, true)}
                                     </ul>
                                   </motion.div>
                                 )}
